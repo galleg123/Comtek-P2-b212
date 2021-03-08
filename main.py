@@ -2,7 +2,6 @@ import pygame
 import random
 import sys
 
-from pygame.constants import K_RIGHT
 from classes import (
     car,
     road,
@@ -35,17 +34,9 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 run = False
-            
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:                                    # Move forward when holding "Up"
-                    Car.speed = 1
-                if event.key == pygame.K_DOWN:                                  # Move backwards when holding "Down"
-                    Car.speed = -1
+            Car.movement(event)
+        
 
-
-            if event.type == pygame.KEYUP:          
-                if event.key == pygame.K_UP or event.key == pygame.K_DOWN:      # Stop moving when a key is letted go
-                    Car.speed = 0
 
         Car.rect = Car.rect.move(Car.speed,0)                                   # Move the car
         screen.blit(Road.img, Road.rect)                                        # Render the road
