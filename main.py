@@ -26,9 +26,9 @@ def main():
             if event.type == QUIT:
                 run = False
 
-        screen.blit(Car.carImg,(100,100))
+        screen.blit(Car.carImg, (100, 100))
+        display.flip()
 
 
 if __name__ == "__main__":
     main()
-
