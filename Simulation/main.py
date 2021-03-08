@@ -13,7 +13,7 @@ screen = display.set_mode(size)
 
 def main():
     run = True
-    while run:
+    while run or display.get_active():
         for event in pygame.event.get():
             if event.type ==pygame.QUIT:
                 run =False
