@@ -6,11 +6,7 @@ from pygame import (
     display,
     init,
 )
-<<<<<<< HEAD
-#tilfældig linie hej ok
-=======
-#tilfældig linie hejfdfdf
->>>>>>> 6816e3b6158f5104c156e55de39b34608ea9cbc3
+
 init()
 size = width, height = 1920, 1000
 screen = display.set_mode(size)
