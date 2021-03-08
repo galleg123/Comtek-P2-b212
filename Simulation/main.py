@@ -6,7 +6,7 @@ from pygame import (
     display,
     init,
 )
-
+#tilfældig linie
 init()
 size = width, height = 1920, 1000
 screen = display.set_mode(size)
