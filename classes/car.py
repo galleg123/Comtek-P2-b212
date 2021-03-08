@@ -10,7 +10,8 @@ from pygame import (
 )
 
 class car:
+    speed = 0
     img = image.load("assets\\car.png")
     rect = img.get_rect()
-    img = transform.scale(img, [int(rect.x/2),int(rect.y/2)])
+    img = transform.scale(img, [int(rect.width/3),int(rect.height/3)])
     rect = img.get_rect()
