@@ -4,7 +4,6 @@ import sys
 from pygame import (
     image,
     display,
-
     init,
 )
 
