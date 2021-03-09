@@ -22,20 +22,39 @@ class car:
             txt = e.text
 
             if txt == "d":
-                if self.speed < 7:
+                if self.speed < 40:
                     self.speed += 1
 
             if txt == "a":
-                if self.speed > -3:
+                if self.speed > -5:
                     self.speed -= 1
 
 
             if txt == "s":
-                if self.rect.y == 8:
-                    self.rect.y = 142
+                if self.rect.y == 6:
+                    self.rect.y = 107
 
             if txt == "w":
-                if self.rect.y == 142:
-                    self.rect.y = 8
-
-
+                if self.rect.y == 107:
+                    self.rect.y = 6
+    
+    def outOfBounds(self, screenwidth, roads):
+        if self.speed > 0:
+            if (self.rect.x + (self.rect.width/2)) >= screenwidth:
+                if not self.rect.y == (((self.rect.height*2.5) + 10) * (roads-2)) + 6 and not self.rect.y >= (((self.rect.height*2.5) + 10) * (roads-2)) + 107:
+                    self.rect.y += (self.rect.height*2.5 + 10)
+                    self.rect.x = 0 - (self.rect.width/2)
+                else:
+                    self.rect.y = 6
+                    self.rect.x = 0 - (self.rect.width/2)
+        
+        if self.speed < 0:
+            if (self.rect.x + (self.rect.width/2)) <= 0:
+                if not self.rect.y == 6 and not self.rect.y <= 107:
+                    self.rect.y -= (self.rect.height*2.5 + 10)
+                    self.rect.x = 0 + (self.rect.width/2)
+                else:
+                    self.rect.y += (self.rect.height*2.5 + 10) * (roads - 1)
+                    self.rect.x = 1920 + (self.rect.width/2)
+            
+        
