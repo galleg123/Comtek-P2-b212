@@ -14,7 +14,6 @@ from pygame import (
     QUIT,
     transform, 
 )
-
 import classes
 
 

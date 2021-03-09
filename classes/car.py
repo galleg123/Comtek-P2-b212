@@ -12,6 +12,7 @@ from pygame.constants import TEXTINPUT
 
 class car:
     speed = 0
+    acceleration = 0
     img = image.load("assets\\car.png")
     rect = img.get_rect()
     img = transform.scale(img, [int(rect.width/4),int(rect.height/4)])
@@ -21,14 +22,20 @@ class car:
         if e.type == TEXTINPUT:
             txt = e.text
 
-            if txt == "d":
-                if self.speed < 40:
-                    self.speed += 1
+            if txt == "d" and self.speed >= 0:
+                if self.acceleration < 44:
+                    self.acceleration += 0.5
+                    self.speed = 1.08**self.acceleration
 
-            if txt == "a":
-                if self.speed > -5:
-                    self.speed -= 1
-
+            if txt == " ":
+                if self.acceleration > -10:
+                    self.acceleration -= 0.5
+                    self.speed = 1.08**self.acceleration
+            
+            if txt == "a" and self.speed <= 0:
+                if self.acceleration < 38:
+                    self.acceleration += 0.5
+                    self.speed = -(1.08**self.acceleration)
 
             if txt == "s":
                 if self.rect.y == 6:
@@ -50,11 +57,9 @@ class car:
         
         if self.speed < 0:
             if (self.rect.x + (self.rect.width/2)) <= 0:
-                if not self.rect.y == 6 and not self.rect.y <= 107:
+                if not self.rect.y <= 6 and not self.rect.y == 107:
                     self.rect.y -= (self.rect.height*2.5 + 10)
-                    self.rect.x = 0 + (self.rect.width/2)
+                    self.rect.x = 1920 - (self.rect.width/2)
                 else:
                     self.rect.y += (self.rect.height*2.5 + 10) * (roads - 1)
-                    self.rect.x = 1920 + (self.rect.width/2)
-            
-        
+                    self.rect.x = 1920 - (self.rect.width/2)
