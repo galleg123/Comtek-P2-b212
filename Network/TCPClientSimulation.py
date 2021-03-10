@@ -2,7 +2,7 @@ from socket import *
 import pickle
 
 
-SERVER_IP = "127.0.0.1"
+SERVER_IP = "62.107.59.124"
 SERVER_PORT = 8888
 BUFFER_SIZE = 1024
 
