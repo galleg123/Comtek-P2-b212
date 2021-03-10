@@ -23,21 +23,23 @@ class car:
             txt = e.text
 
             if txt == "d":
-                if self.speed >= 0 or self.acceleration <= -10:
+                if self.speed >= 0 or self.acceleration <= -7:
                     if self.acceleration < 44:
                         self.acceleration += 0.5
                         self.speed = 1.08**self.acceleration
 
             if txt == " ":
-                if self.acceleration > -10:
-                    self.acceleration -= 0.5
+                if self.acceleration < -7:
+                    self.speed = 0
+                if self.acceleration > -7:
+                    self.acceleration -= 1
                     if self.speed < 0:
                         self.speed = -1.08**self.acceleration
                     if self.speed > 0:
                         self.speed = 1.08**self.acceleration
             
             if txt == "a":
-                if self.speed <= 0 or self.acceleration <= -10:
+                if self.speed <= 0 or self.acceleration <= -7:
                     if self.acceleration < 38:
                         self.acceleration += 0.5
                         self.speed = -(1.08**self.acceleration)
