@@ -8,4 +8,5 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-mycursor.execute("CREATE DATABASE mydatabase")
+mycursor.execute("INSERT INTO test.testtable VALUES (7, 8, 9, 10, 11);")
+mycursor.execute("COMMIT;")
