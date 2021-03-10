@@ -27,12 +27,13 @@ class car:
                     self.acceleration += 0.5
                     self.speed = 1.08**self.acceleration
 
-            if txt == " ":
-                if self.acceleration > -10:
-                    self.acceleration -= 0.5
-                    self.speed = 1.08**self.acceleration
+#               if self.acceleration > -10:
+#                    self.acceleration -= 0.5
+#                    self.speed = 1.08**self.acceleration
+#                if self.speed < 0:
+#                    self.acceleration -= 0.7
             
-            if txt == "a" and self.speed <= 0:
+            if txt == "a" and self.speed <= 0 or acceleration =<  :
                 if self.acceleration < 38:
                     self.acceleration += 0.5
                     self.speed = -(1.08**self.acceleration)
