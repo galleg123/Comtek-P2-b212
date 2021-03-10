@@ -1,5 +1,12 @@
 from socket import *
-import pickle
+import pickle, mysql.connector
+
+mydb = mysql.connector.connect(
+  host="62.107.59.124",
+  user="remote",
+  password="test"
+)
+mycursor = mydb.cursor()
 
 HOST = ''           # Symbolic name meaning all available interfaces
 PORT = 8888         # Arbitrary non-privileged port
@@ -19,11 +26,16 @@ while True:  # Server infinite loop
     # a is the address bound to the socket on the other end of the connection
     print('* Connection {} received from {}'.format(CONN_COUNTER, a))
     r = c.recv(BUFFER_SIZE)
-    print('\tIncoming text: {}'.format(r))
+    ##print('\tIncoming text: {}'.format(r))
     dataArray = pickle.loads(r) #Konverter fra bytes til det originale array
     print('\tIncoming text: {}'.format(dataArray))
-    c.send(bytes('Hi there! Got your message from {}'.format(a[0]), 'utf-8'))
+    c.send(bytes('Hi there! Got your message from {} Number {}'.format(a[0], CONN_COUNTER), 'utf-8'))
     c.close()
 
-    #data = int(r)
-    #print("Integer: {}".format(data))
+    print(dataArray[0])
+
+    mycursor.execute("INSERT INTO test.testtable VALUES (%s, %s, %s, %s, %s, %s);", (str.join(a), dataArray[0], dataArray[1], dataArray[2], dataArray[3], dataArray[4], ))
+    mycursor.execute("COMMIT;")
+    print("Inserted into table \n")
+
+
