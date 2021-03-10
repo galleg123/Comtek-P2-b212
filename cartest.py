@@ -22,21 +22,25 @@ class car:
         if e.type == TEXTINPUT:
             txt = e.text
 
-            if txt == "d" and self.speed >= 0:
-                if self.acceleration < 44:
-                    self.acceleration += 0.5
-                    self.speed = 1.08**self.acceleration
+            if txt == "d":
+                if self.speed >= 0 or self.acceleration <= -10:
+                    if self.acceleration < 44:
+                        self.acceleration += 0.5
+                        self.speed = 1.08**self.acceleration
 
-#               if self.acceleration > -10:
-#                    self.acceleration -= 0.5
-#                    self.speed = 1.08**self.acceleration
-#                if self.speed < 0:
-#                    self.acceleration -= 0.7
+            if txt == " ":
+                if self.acceleration > -10:
+                    self.acceleration -= 0.5
+                    if self.speed < 0:
+                        self.speed = -1.08**self.acceleration
+                    if self.speed > 0:
+                        self.speed = 1.08**self.acceleration
             
-            if txt == "a" and self.speed <= 0 or acceleration =<  :
-                if self.acceleration < 38:
-                    self.acceleration += 0.5
-                    self.speed = -(1.08**self.acceleration)
+            if txt == "a":
+                if self.speed <= 0 or self.acceleration <= -10:
+                    if self.acceleration < 38:
+                        self.acceleration += 0.5
+                        self.speed = -(1.08**self.acceleration)
 
             if txt == "s":
                 if self.rect.y == 6:
