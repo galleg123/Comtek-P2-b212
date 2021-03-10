@@ -1,4 +1,5 @@
 from socket import *
+import pickle
 
 HOST = ''           # Symbolic name meaning all available interfaces
 PORT = 8888         # Arbitrary non-privileged port
@@ -19,7 +20,10 @@ while True:  # Server infinite loop
     print('* Connection {} received from {}'.format(CONN_COUNTER, a))
     r = c.recv(BUFFER_SIZE)
     print('\tIncoming text: {}'.format(r))
+    dataArray = pickle.loads(r) #Konverter fra bytes til det originale array
+    print('\tIncoming text: {}'.format(dataArray))
     c.send(bytes('Hi there! Got your message from {}'.format(a[0]), 'utf-8'))
     c.close()
-    data = int(r)
-    print("Integer: {}".format(data))
+
+    #data = int(r)
+    #print("Integer: {}".format(data))
