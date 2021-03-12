@@ -21,16 +21,27 @@ init()
 size = width, height = 1920, 1000
 screen = display.set_mode(size)
 numOfRoads = 0
-
+numOfCars = 10
 def main():
-    
+    global numOfRoads
     Car = car.car()
-    Car.rect.centery = Car.rect.centery + 6                                     # Make it start 6 pixels below the top of the screen
+    AICars = []
+    cars = []
+    Road = road.road().create(Car.rect.height)   
+    while ((Road.rect.y + Road.rect.height) <= 1000):
+            screen.blit(Road.img, Road.rect)
+            Road.rect.y += (Road.rect.height + 10)
+            numOfRoads += 1
     
-    Road = road.road().create(Car.rect.height)
+    manualCar = Car.create(numOfRoads,"assets\\car.png",screen,width)
+    cars.append(manualCar)
+    for i in range(numOfCars):
+        AICars.append(Car.create(numOfRoads,"assets\\car2.png",screen,width))
+        cars.append(AICars[i])
+
     run = True
     while run and display.get_active():
-        
+        numOfRoads = 0
         for event in pygame.event.get():
             if event.type == QUIT:
                 run = False
@@ -40,18 +51,20 @@ def main():
         screen.fill([0,0,0])
         Car.rect = Car.rect.move(Car.speed,0)                                   # Move the car
 
-        global numOfRoads
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
             screen.blit(Road.img, Road.rect)
             Road.rect.y += (Road.rect.height + 10)
             numOfRoads += 1
         Car.outOfBounds(width, numOfRoads)
-        numOfRoads = 0
+        
+        for i in range(cars.__len__()):
+            screen.blit(cars[i].img, cars[i].rect)
+        
         Road.rect.y = 0
 
-
         
-        screen.blit(Car.img, Car.rect)                                          # Render the car
+        
+        #screen.blit(Car.img, Car.rect)                                          # Render the car
         
         
         display.flip()
