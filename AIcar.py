@@ -25,7 +25,7 @@ class AIcar:
             if self.AIacceleration < 44:
                 self.AIacceleration += 0.5
                 self.AIspeed = 1.08**self.AIacceleration
-            
+      
     def outOfBounds(self, screenwidth, roads):
         if self.AIspeed > 0:
             if (self.AIrect.x + (self.AIrect.width/2)) >= screenwidth:
