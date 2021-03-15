@@ -64,7 +64,7 @@ class car:
         screen.blit(self.img, self.rect)
         self.img = image.load(Image)
         self.img = transform.scale(
-            self.img, [int(self.rect.width/4), int(self.rect.height/4)])
+            self.img, [int(self.rect.width), int(self.rect.height)])
         self.rect = self.img.get_rect()
         self.rect.x = random.randint(0, width)
-        self.rect.y = 6 + self.rect.height * 2.5 * random.randint(0, roads)
+        self.rect.y = 6 + (self.rect.height * 2.5 + 10) * random.randint(0, roads)

@@ -28,7 +28,9 @@ def main():
         AICars.append(car(
             numOfRoads, "assets\\car2.png", screen, width))
         cars.append(AICars[i])
+    
     run = True
+    
     while run and display.get_active():
         numOfRoads = 0
         for e in event.get():
