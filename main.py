@@ -28,9 +28,9 @@ def main():
         AICars.append(car(
             numOfRoads, "assets\\car2.png", screen, width))
         cars.append(AICars[i])
-    
+
     run = True
-    
+
     while run and display.get_active():
         numOfRoads = 0
         for e in event.get():
@@ -56,7 +56,11 @@ def main():
             screen.blit(cars[i].img, cars[i].rect)
 
         Road.rect.y = 0
-
+        for i in range(cars.__len__()):
+            for j in range(cars.__len__()):
+                while cars[i].rect.colliderect(cars[j]) and not cars[i] == cars[j]:
+                    cars[i].rect.x -= 1
+                    cars[j].rect.x += 1
         # screen.blit(Car.img, Car.rect)                                          # Render the car
 
         display.flip()
