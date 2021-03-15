@@ -68,4 +68,4 @@ class car:
             self.img, [int(self.rect.width), int(self.rect.height)])
         self.rect = self.img.get_rect()
         self.rect.x = random.randint(0, width)
-        self.rect.y = 6 + (self.rect.height * 2.5 + 10) * random.randint(0, roads)
+        self.rect.y = 6 + (self.rect.height * 2.5 + 10) * random.randint(0, roads - 1)
