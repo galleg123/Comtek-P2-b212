@@ -16,17 +16,17 @@ def main():
     global numOfRoads
     AICars = []
     cars = []
-    Road = road(car.rect.height)
+    Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
 
-    Car = car(numOfRoads, "assets\\car.png", screen, width)
+    Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height)
     cars.append(Car)
     for i in range(numOfCars):
         AICars.append(car(
-            numOfRoads, "assets\\car2.png", screen, width))
+            numOfRoads, "assets\\car2.png", screen, width, Road.rect.height))
         cars.append(AICars[i])
 
     run = True
@@ -55,7 +55,7 @@ def main():
         #Car.outOfBounds(width, numOfRoads)
 
         for i in range(cars.__len__()):
-            cars[i].outOfBounds(width, numOfRoads)
+            cars[i].outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(cars[i].img, cars[i].rect)
 
         Road.rect.y = 0
