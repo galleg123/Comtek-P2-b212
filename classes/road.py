@@ -10,11 +10,11 @@ from pygame import (
 )
 from classes import car
 
+
 class road:
     img = image.load("assets\\road.png")
     rect = img.get_rect()
-    
-    def create(self, size):
-        self.img = transform.scale(self.img, [1920,int(size*2.5)])
+
+    def __init__(self, size):
+        self.img = transform.scale(self.img, [1920, int(size*2.5)])
         self.rect = self.img.get_rect()
-        return self

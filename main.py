@@ -1,6 +1,7 @@
 from Network.thread import uploadThread
 
-from classes import car, road
+from classes.car import car
+from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
 
 
@@ -13,19 +14,18 @@ numOfCars = 10
 
 def main():
     global numOfRoads
-    Car = car.car()
     AICars = []
     cars = []
-    Road = road.road().create(Car.rect.height)
+    Road = road(car.rect.height)
     while ((Road.rect.y + Road.rect.height) <= 1000):
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
 
-    manualCar = Car.create(numOfRoads, "assets\\car.png", screen, width)
-    cars.append(manualCar)
+    Car = car(numOfRoads, "assets\\car.png", screen, width)
+    cars.append(Car)
     for i in range(numOfCars):
-        AICars.append(Car.create(
+        AICars.append(car(
             numOfRoads, "assets\\car2.png", screen, width))
         cars.append(AICars[i])
     run = True
