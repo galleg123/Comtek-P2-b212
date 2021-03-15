@@ -32,6 +32,7 @@ class car:
             if txt == " ":
                 if self.acceleration >= -10:
                     self.acceleration -= 1
+                    self.speed = 1.08**self.acceleration
 
             if txt == "s":
                 if self.rect.y == 6:
