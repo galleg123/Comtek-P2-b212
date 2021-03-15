@@ -38,27 +38,30 @@ def main():
                 run = False
             if e.type == TEXTINPUT:
                 if e.text == "u":
-                    upload = uploadThread(data=[5, 5, 5, 5, 5])
+                    upload = uploadThread(data=[int(cars[1].speed), int(
+                        cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
                     upload.start()
             Car.movement(e)
 
         screen.fill([0, 0, 0])
         # Move the car
-        Car.rect = Car.rect.move(Car.speed, 0)
+        for i in range(cars.__len__()):
+            cars[i].rect = cars[i].rect.move(cars[i].speed, 0)
 
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
             screen.blit(Road.img, Road.rect)
             Road.rect.y += (Road.rect.height + 10)
             numOfRoads += 1
-        Car.outOfBounds(width, numOfRoads)
+        #Car.outOfBounds(width, numOfRoads)
 
         for i in range(cars.__len__()):
+            cars[i].outOfBounds(width, numOfRoads)
             screen.blit(cars[i].img, cars[i].rect)
 
         Road.rect.y = 0
         for i in range(cars.__len__()):
             for j in range(cars.__len__()):
-                while cars[i].rect.colliderect(cars[j]) and not cars[i] == cars[j]:
+                while cars[i].rect.colliderect(cars[j]) and not i == j:
                     cars[i].rect.x -= 1
                     cars[j].rect.x += 1
         # screen.blit(Car.img, Car.rect)                                          # Render the car

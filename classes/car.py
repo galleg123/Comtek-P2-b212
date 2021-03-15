@@ -13,7 +13,7 @@ from pygame.constants import TEXTINPUT
 
 
 class car:
-    speed = 0
+    speed = 10
     acceleration = 0
     img = image.load("assets\\car.png")
     rect = img.get_rect()
@@ -43,23 +43,21 @@ class car:
                     self.rect.y = 6
 
     def outOfBounds(self, screenwidth, roads):
-        if self.speed > 0:
-            if (self.rect.x + (self.rect.width/2)) >= screenwidth:
-                if not self.rect.y == (((self.rect.height*2.5) + 10) * (roads-2)) + 6 and not self.rect.y >= (((self.rect.height*2.5) + 10) * (roads-2)) + 107:
-                    self.rect.y += (self.rect.height*2.5 + 10)
-                    self.rect.x = 0 - (self.rect.width/2)
-                else:
-                    self.rect.y = 6
-                    self.rect.x = 0 - (self.rect.width/2)
+        if (self.rect.x + (self.rect.width/2)) > screenwidth:
+            if not self.rect.y == (((self.rect.height*2.5) + 10) * (roads-2)) + 6 and not self.rect.y >= (((self.rect.height*2.5) + 10) * (roads-2)) + 107:
+                self.rect.y += (self.rect.height*2.5 + 10)
+                self.rect.x = 0 - (self.rect.width/2)
+            else:
+                self.rect.y = 6
+                self.rect.x = 0 - (self.rect.width/2)
 
-        if self.speed < 0:
-            if (self.rect.x + (self.rect.width/2)) <= 0:
-                if not self.rect.y <= 6 and not self.rect.y == 107:
-                    self.rect.y -= (self.rect.height*2.5 + 10)
-                    self.rect.x = 1920 - (self.rect.width/2)
-                else:
-                    self.rect.y += (self.rect.height*2.5 + 10) * (roads - 1)
-                    self.rect.x = 1920 - (self.rect.width/2)
+        if (self.rect.x + (self.rect.width/2)) < 0:
+            if not self.rect.y <= 6 and not self.rect.y == 107:
+                self.rect.y -= (self.rect.height*2.5 + 10)
+                self.rect.x = 1920 - (self.rect.width/2)
+            else:
+                self.rect.y += (self.rect.height*2.5 + 10) * (roads - 1)
+                self.rect.x = 1920 - (self.rect.width/2)
 
     def __init__(self, roads, Image, screen, width):
         screen.blit(self.img, self.rect)
@@ -68,4 +66,5 @@ class car:
             self.img, [int(self.rect.width), int(self.rect.height)])
         self.rect = self.img.get_rect()
         self.rect.x = random.randint(0, width)
-        self.rect.y = 6 + (self.rect.height * 2.5 + 10) * random.randint(0, roads - 1)
+        self.rect.y = 6 + (self.rect.height * 2.5 + 10) * \
+            random.randint(0, roads - 1)
