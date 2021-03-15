@@ -34,7 +34,7 @@ while True:  # Server infinite loop
 
     print(dataArray[0])
 
-    mycursor.execute("INSERT INTO test.testtable VALUES (%s, %s, %s, %s, %s, %s);", (str.join(a), dataArray[0], dataArray[1], dataArray[2], dataArray[3], dataArray[4], ))
+    mycursor.execute("INSERT INTO test.testtable VALUES (%s, %s, %s, %s, %s, %s);", (a[0], dataArray[0], dataArray[1], dataArray[2], dataArray[3], dataArray[4], ))
     mycursor.execute("COMMIT;")
     print("Inserted into table \n")
 
