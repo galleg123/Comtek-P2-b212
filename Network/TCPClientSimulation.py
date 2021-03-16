@@ -10,7 +10,7 @@ s = socket(AF_INET, SOCK_STREAM)
 s.connect((SERVER_IP, SERVER_PORT))
 test = "30"
 array = ([1, 2, 3, 4, 5])
-dataString = pickle.dumps(array) #Konverter array til bytes via pickle
+dataString = pickle.dumps(array) #Converts array to bytes via pickle
 
 s.send(dataString)
 #s.send(bytes(test, "utf-8"))
