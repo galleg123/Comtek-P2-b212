@@ -63,7 +63,7 @@ def main():
                 while cars[i].rect.colliderect(cars[j]) and not i == j:
                     cars[i].rect.x -= 1
                     cars[j].rect.x += 1
-        # screen.blit(Car.img, Car.rect)                                          # Render the car
+        
         
         
         display.flip()
