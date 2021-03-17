@@ -35,36 +35,35 @@ class car:
                     self.speed = 1.08**self.acceleration
 
             if txt == "s":
-                if self.rect.y == 6:
-                    self.rect.y = 107
+                if self.rect.y == 5:
+                    self.rect.y = 100
 
             if txt == "w":
-                if self.rect.y == 107:
-                    self.rect.y = 6
+                if self.rect.y == 100:
+                    self.rect.y = 5
 
-    def outOfBounds(self, screenwidth, roads):
+    def outOfBounds(self, screenwidth, roads, roadheight):
         if (self.rect.x + (self.rect.width/2)) > screenwidth:
-            if not self.rect.y == (((self.rect.height*2.5) + 10) * (roads-2)) + 6 and not self.rect.y >= (((self.rect.height*2.5) + 10) * (roads-2)) + 107:
-                self.rect.y += (self.rect.height*2.5 + 10)
+            if not self.rect.y == (((roadheight) + 10) * (roads-1)) + 5 and not self.rect.y >= (((roadheight) + 10) * (roads-1)) + 100:
+                self.rect.y += (roadheight + 10)
                 self.rect.x = 0 - (self.rect.width/2)
             else:
-                self.rect.y = 6
+                self.rect.y = 5
                 self.rect.x = 0 - (self.rect.width/2)
 
         if (self.rect.x + (self.rect.width/2)) < 0:
-            if not self.rect.y <= 6 and not self.rect.y == 107:
-                self.rect.y -= (self.rect.height*2.5 + 10)
+            if not self.rect.y <= 5 and not self.rect.y == 100:
+                self.rect.y -= (roadheight + 10)
                 self.rect.x = 1920 - (self.rect.width/2)
             else:
-                self.rect.y += (self.rect.height*2.5 + 10) * (roads - 1)
+                self.rect.y += (roadheight) * (roads)
                 self.rect.x = 1920 - (self.rect.width/2)
 
-    def __init__(self, roads, Image, screen, width):
+    def __init__(self, roads, Image, screen, width, roadheight):
         screen.blit(self.img, self.rect)
         self.img = image.load(Image)
         self.img = transform.scale(
             self.img, [int(self.rect.width), int(self.rect.height)])
         self.rect = self.img.get_rect()
         self.rect.x = random.randint(0, width)
-        self.rect.y = 6 + (self.rect.height * 2.5 + 10) * \
-            random.randint(0, roads - 1)
+        self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)
