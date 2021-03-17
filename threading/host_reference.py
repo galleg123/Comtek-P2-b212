@@ -29,14 +29,19 @@ class client_connection(threading.Thread):
         print(threading.Thread.getName(self) + " created.")
 
     def run(self):
-        while True:
-            self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")
-            if not self.r == "":
-                print(self.r)
-                print(threading.Thread.getName(self))
-            if self.r == "quit":
-                print("returning")
-                return
+        try:
+            while True:
+                self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")
+                if not self.r == "":
+                    print(self.r)
+                    print(threading.Thread.getName(self))
+                if self.r == "quit":
+                    print("returning")
+                    return
+        except:
+            print("client on " + threading.Thread.getName(self) +
+                  " ended the connection")
+            return
 
 
 def main():
