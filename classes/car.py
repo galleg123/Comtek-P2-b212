@@ -29,7 +29,7 @@ class car:
             if txt == "d":
                 if self.speed < 44:
                     self.acceleration = 0.5 # 99% på at det var en dårlig ide med self.acceleration += 0.5
-                    self.speed =self.speed+(self.speed**self.acceleration) #Der er ændret til noget rigtig måske
+                    self.speed =self.speed+(self.speed**self.acceleration) #Det skal være en logaritmisk aftagende funktion
 
             if txt == " ":
                 if self.acceleration >= -10:
