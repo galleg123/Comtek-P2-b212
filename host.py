@@ -11,7 +11,7 @@ from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, ev
 init()
 size = width, height = 1920, 1000
 screen = display.set_mode(size)
-playerPos = []
+clients = []
 simState = False
 font = font.Font("freesansbold.ttf", 32)
 
@@ -47,23 +47,43 @@ class client_connection(threading.Thread):
         self.BUFFER_SIZE = 1024
         self.c = client
         self.r = ""
+        self.addr = addr
         print(threading.Thread.getName(self) + " created.")
 
     def run(self):
         try:
             while True:
                 self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")
-                if not self.r == "":
+                if self.addr[0] == "127.0.0.1":
+                    return
+                elif not self.r == "":
                     print(self.r)
-                    print(threading.Thread.getName(self))
-                if self.r == "quit":
+                    if self.r == "join":
+                        clients.append(self)
+                        break
+                elif self.r == "quit":
                     print("Client on " + threading.Thread.getName(self) +
                           " ended the connection by keyword.")
                     return
+            started = False
+            while True:
+                if simState:
+                    if not started:
+                        self.c.send(bytes("start", 'utf-8'))
+                        print("start")
+                        started = True
+                    self.c.send(bytes("location data", 'utf-8'))
+                    self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')
+                    print(self.data)
+
         except:
             print("Client on " + threading.Thread.getName(self) +
                   " ended the connection by exception (close window).")
             return
+
+    def close(self):
+        self.c.close()
+        print("closed client connection")
 
 
 def simulation():
@@ -85,15 +105,13 @@ def simulation():
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height))
 
-    run = True
-
-    while run and display.get_active():
+    while display.get_active():
         numOfRoads = 0
         Road.rect.y = 0
 
         for e in event.get():
             if e.type == QUIT:
-                run = False
+                sys.exit()
             if e.type == TEXTINPUT:
                 if e.text == "u":
                     upload = uploadThread(data=[int(cars[1].speed), int(
@@ -131,7 +149,7 @@ def menu():
     squarerect.center = screen.get_rect().center
     screen.blit(square, squarerect)
     numClients = font.render(
-        "total clients: " + playerPos.__len__().__str__(), True, (0, 0, 0))
+        "total clients: " + clients.__len__().__str__(), True, (0, 0, 0))
     numClientsRect = numClients.get_rect()
     numClientsRect.top = screen.get_rect().top
     numClientsRect.centerx = screen.get_rect().centerx
@@ -151,6 +169,8 @@ def main():
         menu()
     s.stop()
     simulation()
+    for c in clients:
+        c.close()
     print("Main thread finished.")
 
 
