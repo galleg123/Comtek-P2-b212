@@ -38,7 +38,6 @@ class car:
                 if self.speed >= 0:
                     self.acceleration = 0.5
                     self.speed =self.speed-(self.speed**self.acceleration)
-                    print(self.speed)
                 if self.speed < 0:
                     self.speed = 0
 
