@@ -15,6 +15,9 @@ clients = []
 simState = False
 font = font.Font("freesansbold.ttf", 32)
 
+data = "placeholder"
+locations = {}
+
 
 class socketServer(threading.Thread):
     def __init__(self):
@@ -30,7 +33,8 @@ class socketServer(threading.Thread):
         self.s.listen(1)  # listen
         while not simState:  # loop until game is executed
             c, a = self.s.accept()  # accept
-            client = client_connection(c, a)
+            self.CONN_COUNTER += 1
+            client = client_connection(c, a, self.CONN_COUNTER)
             self.running_sockets.append(client.start())  # fork
         print("Socket server finished")
 
@@ -42,15 +46,18 @@ class socketServer(threading.Thread):
 
 
 class client_connection(threading.Thread):
-    def __init__(self, client, addr):
+    def __init__(self, client, addr, num):
         threading.Thread.__init__(self)
         self.BUFFER_SIZE = 1024
         self.c = client
         self.r = ""
         self.addr = addr
+        self.num = num
         print(threading.Thread.getName(self) + " created.")
 
     def run(self):
+        global data
+        global locations
         try:
             while True:
                 self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")
@@ -72,9 +79,9 @@ class client_connection(threading.Thread):
                         self.c.send(bytes("start", 'utf-8'))
                         print("start")
                         started = True
-                    self.c.send(bytes("location data", 'utf-8'))
+                    self.c.send(bytes(data, 'utf-8'))
                     self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')
-                    print(self.data)
+                    locations[self.num-1] = self.data
 
         except:
             print("Client on " + threading.Thread.getName(self) +
@@ -88,6 +95,7 @@ class client_connection(threading.Thread):
 
 def simulation():
     global simState
+    global data
     simState = True
     numOfRoads = 0
     numOfCars = 10
@@ -119,10 +127,24 @@ def simulation():
                     upload.start()
             Car.movement(e)
 
+        data = "0:" + cars[0].speed.__str__() + cars[0].rect.center.__str__()
+        for i in range(cars.__len__() - 1):
+            data += ("," + (i + 1).__str__() + ":" +
+                     cars[i + 1].speed.__str__() + cars[i + 1].rect.center.__str__())
+        print(locations)
+        for i in range(locations.__len__()):
+            if not locations.get(i) == "placeholder":
+                location = locations.get(i).split(",")
+                cars[i].speed = int(location[0])
+                #cars[i].rect.center = tuple(location[1])
+
         screen.fill([0, 0, 0])
         # Move the car
         for i in range(cars.__len__()):
-            cars[i].rect = cars[i].rect.move(cars[i].speed, 0)
+            try:
+                cars[i].rect = cars[i].rect.move(cars[i].speed, 0)
+            except:
+                print(cars[i].speed)
 
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
             screen.blit(Road.img, Road.rect)

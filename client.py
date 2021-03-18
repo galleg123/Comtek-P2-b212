@@ -32,7 +32,7 @@ class client(threading.Thread):
             if In == "quit":
                 self.s.close()
                 return
-        
+
         self.started = False
         while self.joined:
             print("listening...")
@@ -44,9 +44,11 @@ class client(threading.Thread):
             if data.__len__() > 0:
                 self.s.send(bytes(data, 'utf-8'))
                 print("location sent.")
+
     def stop(self):
         self.s.close()
         self.joined = False
+
 
 def simulation():
     init()
@@ -73,10 +75,10 @@ def simulation():
         numOfRoads = 0
         Road.rect.y = 0
         global data
-        
+
         for e in event.get():
             if e.type == QUIT:
-                
+
                 run = False
             if e.type == TEXTINPUT:
                 if e.text == "u":
@@ -100,13 +102,13 @@ def simulation():
             cars[i].outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(cars[i].img, cars[i].rect)
 
-        
         for i in range(cars.__len__()):
             for j in range(cars.__len__()):
                 while cars[i].rect.colliderect(cars[j]) and not i == j:
                     cars[i].rect.x -= 1
                     cars[j].rect.x += 1
         display.flip()
+
 
 def main():
     c = client()
