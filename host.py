@@ -135,9 +135,9 @@ def simulation():
         for i in range(locations.__len__()):
             if not locations.get(i) == "placeholder":
                 location = locations.get(i).split(",")
-                cars[i].speed = int(location[0])
-                #cars[i].rect.center = tuple(location[1])
-
+                cars[i].speed = float(location[0])
+                cars[i].rect.center = (
+                    int(location[1].strip("(")), int(location[2].strip(")")))
         screen.fill([0, 0, 0])
         # Move the car
         for i in range(cars.__len__()):
