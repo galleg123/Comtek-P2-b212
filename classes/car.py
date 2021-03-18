@@ -15,8 +15,9 @@ from pygame.constants import TEXTINPUT
 
 class car:
     speed = 10
-    acceleration = 0.5
-    breaklengt = (speed**2)/(2*acceleration)
+    acceleration = 0
+    deceleration = 1.0
+    breaklengt = (speed**2)/(2*deceleration)
     img = image.load("assets\\car.png")
     rect = img.get_rect()
     img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])
@@ -28,13 +29,18 @@ class car:
 
             if txt == "d":
                 if self.speed < 44:
-                    self.acceleration = 0.5 # 99% på at det var en dårlig ide med self.acceleration += 0.5
-                    self.speed =self.speed+(self.speed**self.acceleration) #Det skal være en logaritmisk aftagende funktion
+                    self.acceleration = 0.2 # 99% på at det var en dårlig ide med self.acceleration += 0.5
+                    self.speed =self.speed+(self.speed**self.acceleration) #Det skal være en logaritmisk aftagende funktion eller en form for diminishing returns
+                if self.speed == 0:
+                    self.speed = 2
 
             if txt == " ":
-                if self.acceleration >= -10:
-                    self.acceleration -= 1
-                    self.speed = 1.08**self.acceleration
+                if self.speed >= 0:
+                    self.acceleration = 0.5
+                    self.speed =self.speed-(self.speed**self.acceleration)
+                    print(self.speed)
+                if self.speed < 0:
+                    self.speed = 0
 
             if txt == "s":
                 if self.rect.y == 5:
