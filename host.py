@@ -76,7 +76,8 @@ class client_connection(threading.Thread):
             while True:
                 if simState:
                     if not started:
-                        self.c.send(bytes("start", 'utf-8'))
+                        self.c.send(
+                            bytes("start," + self.num.__str__(), 'utf-8'))
                         print("start")
                         started = True
                     self.c.send(bytes(data, 'utf-8'))
@@ -129,7 +130,7 @@ def simulation():
 
         data = "0:" + cars[0].speed.__str__() + cars[0].rect.center.__str__()
         for i in range(cars.__len__() - 1):
-            data += ("," + (i + 1).__str__() + ":" +
+            data += (";" + (i + 1).__str__() + ":" +
                      cars[i + 1].speed.__str__() + cars[i + 1].rect.center.__str__())
         print(locations)
         for i in range(locations.__len__()):

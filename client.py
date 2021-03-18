@@ -7,6 +7,8 @@ from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
 
 data = "placeholder"
+locations = {}
+clientNum = 0
 
 
 class client(threading.Thread):
@@ -20,6 +22,8 @@ class client(threading.Thread):
 
     def run(self):
         global data
+        global locations
+        global clientNum
         self.joined = False
         while True:
             In = input("write join to join a session: ")
@@ -35,15 +39,16 @@ class client(threading.Thread):
 
         self.started = False
         while self.joined:
-            print("listening...")
             r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')
-            print("received data: " + r)
-            if r == "start":
+            if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":
+                dataArray = r.split(";")
+                for d in dataArray:
+                    locations[int(d.split(":")[0])] = d.split(":")[1]
+            if r.split(",")[0] == "start":
+                clientNum = r.split(",")[1]
                 self.started = True
-            print(data)
             if data.__len__() > 0:
                 self.s.send(bytes(data, 'utf-8'))
-                print("location sent.")
 
     def stop(self):
         self.s.close()
@@ -51,6 +56,7 @@ class client(threading.Thread):
 
 
 def simulation():
+    global clientNum
     init()
     size = width, height = 1920, 1000
     screen = display.set_mode(size)
@@ -87,6 +93,12 @@ def simulation():
                     upload.start()
             Car.movement(e)
         data = Car.speed.__str__() + "," + Car.rect.center.__str__()
+        if locations.__len__() == cars.__len__():
+            for i in range(cars.__len__()):
+                location = locations[i].split("(")
+                cars[i].speed = float(location[0])
+                cars[i].rect.center = (int(location[1].strip(")").split(
+                    ",")[0]), int(location[1].strip(")").split(",")[1]))
 
         screen.fill([0, 0, 0])
         # Move the car
