@@ -9,7 +9,7 @@ init()
 size = width, height = 1920, 1000
 screen = display.set_mode(size)
 numOfRoads = 0
-numOfCars = 10                      #Antal biler der skal bruges
+numOfCars = 1                      #Antal biler der skal bruges
 
 
 def main():
