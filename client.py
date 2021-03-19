@@ -14,7 +14,7 @@ clientNum = 0
 class client(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.SERVER_IP = "192.168.0.100"
+        self.SERVER_IP = "192.168.0.101"
         self.SERVER_PORT = 8888
         self.BUFFER_SIZE = 1024
         self.s = socket(AF_INET, SOCK_STREAM)
