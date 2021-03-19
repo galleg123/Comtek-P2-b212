@@ -17,7 +17,7 @@ class car:
     speed = 10                                              
     acceleration = 0
     deceleration = 1.0
-    breaklengt = (speed**2)/(2*deceleration)                    
+    breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     img = image.load("assets\\car.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])     #Change the size of car

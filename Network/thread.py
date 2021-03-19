@@ -19,11 +19,9 @@ class uploadThread(threading.Thread):
         s = socket(AF_INET, SOCK_STREAM)
         s.connect((SERVER_IP, SERVER_PORT))
         test = "30"
-        # Konverter array til bytes via pickle
-        dataString = pickle.dumps(self.data)
+        dataString = pickle.dumps(self.data)                  # Konverter array til bytes via pickle
 
-        s.send(dataString)
-        #s.send(bytes(test, "utf-8"))
+        s.send(dataString)                                    #s.send(bytes(test, "utf-8"))
         print("Data sent.")
         time.sleep(1)
         s.close()
