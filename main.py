@@ -6,7 +6,7 @@ from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
 
 
 init()
-size = width, height = 1920, 1000
+size = width, height = 1920, 1000 # Sets the size of the window, be aware if you can't run minimum this resollution it will create problems.
 screen = display.set_mode(size)
 numOfRoads = 0
 numOfCars = 1                      #Antal biler der skal bruges
