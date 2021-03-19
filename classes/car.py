@@ -27,25 +27,25 @@ class car:
         if e.type == TEXTINPUT:
             txt = e.text
 
-            if txt == "d":
+            if txt == "d": #makes the car move forward and accelerates
                 if self.speed < 44:
-                    self.acceleration = 0.2 # 99% på at det var en dårlig ide med self.acceleration += 0.5
-                    self.speed =self.speed+(self.speed**self.acceleration) #Det skal være en logaritmisk aftagende funktion eller en form for diminishing returns
+                    self.acceleration = 0.2 
+                    self.speed =self.speed+(self.speed**self.acceleration) #This is not the final estimation on how the car should accelerate
                 if self.speed == 0:
                     self.speed = 2
 
-            if txt == " ":
+            if txt == " ": #Breakes the car speed
                 if self.speed >= 0:
                     self.acceleration = 0.5
                     self.speed =self.speed-(self.speed**self.acceleration)
                 if self.speed < 0:
                     self.speed = 0
 
-            if txt == "s":
+            if txt == "s": #change lane up, works only on lane 1 so far
                 if self.rect.y == 5:
                     self.rect.y = 100
 
-            if txt == "w":
+            if txt == "w": #change lane down, works only on lane 1 so far
                 if self.rect.y == 100:
                     self.rect.y = 5
 
