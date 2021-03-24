@@ -18,6 +18,7 @@ class car:
     acceleration = 0
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
+    maxspeed = 0                                                            #Max speed for the car, is set random between 2 values
     img = image.load("assets\\car.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])     #Change the size of car
@@ -28,7 +29,7 @@ class car:
             txt = e.text                                                    #Definer txt som eventtypen text
 
             if txt == "d":                                                  #If d is pressed
-                if self.speed < 44:                                         #If speed is under 44, and d is pressed gain speed with a given acceleration
+                if self.speed < self.maxspeed:                              #If speed is under 44, and d is pressed gain speed with a given acceleration
                     self.acceleration = 0.2 
                     self.speed =self.speed+(self.speed**self.acceleration)
                 if self.speed == 0:                                         #If speed is 0, and d is pressed, change the speed to 2 so that the above code will work
@@ -68,3 +69,4 @@ class car:
         self.rect = self.img.get_rect()     
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
+        self.maxspeed = random.randint(98,130)                              # Speed between 98, and  130
