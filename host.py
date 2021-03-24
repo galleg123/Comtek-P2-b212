@@ -111,7 +111,7 @@ def simulation():
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-    for i in range(clients):
+    for i in range(clients.__len__()):
         Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height)
         cars.append(Car)
     for i in range(numOfCars):
