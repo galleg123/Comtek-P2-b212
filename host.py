@@ -80,7 +80,7 @@ class client_connection(threading.Thread):                                  #def
                 if simState:                                                #if the simulation is run
                     if not started:                                         #if this client hasn't started their simulation
                         self.c.send(
-                            bytes("start," + self.num.__str__(), 'utf-8'))  #send a message telling it to start
+                            bytes("start," + self.num.__str__() + "," + clients.__len__().__str__(), 'utf-8'))  #send a message telling it to start
                         print("start")                                      #debug
                         started = True                                      #never run this code again
                     self.c.send(bytes(data, 'utf-8'))                       #send the location data to the client

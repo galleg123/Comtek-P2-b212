@@ -10,13 +10,14 @@ from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
 data = "placeholder"                                                        #variable with a placeholder value to be uploaded to the server
 locations = {}                                                              #Dictionary which is accessed for the purposes of synchronizing all clients
 clientNum = 0                                                               #The specific number each client has
-
+clients = 0
 
 # seperate thread to keep the connection to the server going while the simulation is running
 class client(threading.Thread):                                             #class definition, inherits from the threading class
     def __init__(self):                                                     #initialisation method which is run when class is initialized
         threading.Thread.__init__(self)                                     #when the object itself is initialized, initialize the thread
         self.SERVER_IP = "192.168.0.100"                                    #String containing the IP address of the host server
+        #self.SERVER_IP = "62.107.59.124"
         self.SERVER_PORT = 8888                                             #Integer containing the port number of the host server
         self.BUFFER_SIZE = 1024                                             #buffer size determining how much data is read at a time
         self.s = socket(AF_INET, SOCK_STREAM)                               #the socket object is created
@@ -27,6 +28,7 @@ class client(threading.Thread):                                             #cla
         global data                                                         #Import the global variable data
         global locations                                                    #Import locations
         global clientNum                                                    #Import clientNum
+        global clients
         self.joined = False                                                 #create local variable to determine if the client has joined the session
         while True:                                                         #run an infinite loop until broken out of or returned
             In = input("write join to join a session: ")                    #wait until user writes a string into the terminal
@@ -50,6 +52,7 @@ class client(threading.Thread):                                             #cla
                     locations[int(d.split(":")[0])] = d.split(":")[1]       #seperate each array entry into key and value pairs and create a dictionary
             if r.split(",")[0] == "start":                                  #if the received data is start followed by a seperator
                 clientNum = r.split(",")[1]                                 #set client number to the number after the seperator
+                clients = r.split(",")[2]
                 self.started = True                                         #set local variable for determining simulation state to true
             if data.__len__() > 0:                                          #if there is data to send to the host server, send it
                 self.s.send(bytes(data, 'utf-8'))                           #send the data to the host server
