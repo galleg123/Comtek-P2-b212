@@ -155,15 +155,13 @@ def simulation():
             screen.blit(Road.img, Road.rect)
             Road.rect.y += (Road.rect.height + 10)
             numOfRoads += 1
-
+        #bounds and collision
         for c in cars:
             c.outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(c.img, c.rect)
-
-        for c1 in cars:
             for c2 in cars:
-                while c1.rect.colliderect(c2) and not c1 == c2:
-                    c1.rect.x -= 1
+                while c.rect.colliderect(c2) and not c == c2:
+                    c.rect.x -= 1
                     c2.rect.x += 1
         display.flip()
 

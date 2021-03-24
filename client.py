@@ -46,7 +46,7 @@ class client(threading.Thread):                                             #cla
         while self.joined:                                                  #run while loop while the client is connected
             r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')               #receive an encoded string from the host server and decode it
             if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":    #check if it's a placeholder or another keyword
-                print(r)
+                #print(r)
                 dataArray = r.split(";")                                    #decode the string into an array of dictionary formatted variables
                 for d in dataArray:                                         #run for loop for every entry in the array
                     locations[int(d.split(":")[0])] = d.split(":")[1]       #seperate each array entry into key and value pairs and create a dictionary
@@ -77,12 +77,12 @@ def simulation():
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-
-    Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height)
-    cars.append(Car)
+    for i in range(clients.__len__()):
+        cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height))
     for i in range(numOfCars):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height))
+    Car = cars[0]
 
     run = True
 
@@ -103,31 +103,31 @@ def simulation():
             Car.movement(e)
         data = Car.speed.__str__() + "," + Car.rect.center.__str__()
         if locations.__len__() == cars.__len__():
-            for i in range(cars.__len__()):
+            for i in range(1, cars.__len__()):
                 location = locations[i].split("(")
+                print(location)
                 cars[i].speed = float(location[0])
                 cars[i].rect.center = (int(location[1].strip(")").split(
                     ",")[0]), int(location[1].strip(")").split(",")[1]))
+        print()
 
         screen.fill([0, 0, 0])
         # Move the car
-        for i in range(cars.__len__()):
-            cars[i].rect = cars[i].rect.move(cars[i].speed, 0)
+        for c in cars:
+            c.rect = c.rect.move(c.speed, 0)
 
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
             screen.blit(Road.img, Road.rect)
             Road.rect.y += (Road.rect.height + 10)
             numOfRoads += 1
-
-        for i in range(cars.__len__()):
-            cars[i].outOfBounds(width, numOfRoads, Road.rect.height)
-            screen.blit(cars[i].img, cars[i].rect)
-
-        for i in range(cars.__len__()):
-            for j in range(cars.__len__()):
-                while cars[i].rect.colliderect(cars[j]) and not i == j:
-                    cars[i].rect.x -= 1
-                    cars[j].rect.x += 1
+        #bounds and collision
+        for c in cars:
+            c.outOfBounds(width, numOfRoads, Road.rect.height)
+            screen.blit(c.img, c.rect)
+            for c2 in cars:
+                while c.rect.colliderect(c2) and not c == c2:
+                    c.rect.x -= 1
+                    c2.rect.x += 1
         display.flip()
 
 
