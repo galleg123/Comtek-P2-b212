@@ -84,6 +84,7 @@ class client_connection(threading.Thread):                                  #def
                         print("start")                                      #debug
                         started = True                                      #never run this code again
                     self.c.send(bytes(data, 'utf-8'))                       #send the location data to the client
+                    print("data sent to" + threading.Thread.getName(self))
                     self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')   #get data from the client, this is run now because either the client or server has to go first
                     locations[self.num-1] = self.data                       #save the data to global dictionary with a keyword identifier
 

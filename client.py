@@ -52,7 +52,7 @@ class client(threading.Thread):                                             #cla
                     locations[int(d.split(":")[0])] = d.split(":")[1]       #seperate each array entry into key and value pairs and create a dictionary
             if r.split(",")[0] == "start":                                  #if the received data is start followed by a seperator
                 clientNum = r.split(",")[1]                                 #set client number to the number after the seperator
-                clients = r.split(",")[2]
+                clients = int(r.split(",")[2])
                 self.started = True                                         #set local variable for determining simulation state to true
             if data.__len__() > 0:                                          #if there is data to send to the host server, send it
                 self.s.send(bytes(data, 'utf-8'))                           #send the data to the host server
@@ -77,7 +77,7 @@ def simulation():
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-    for i in range(clients.__len__()):
+    for i in range(clients):
         cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height))
     for i in range(numOfCars):
         cars.append(car(
@@ -124,10 +124,10 @@ def simulation():
         for c in cars:
             c.outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(c.img, c.rect)
-            for c2 in cars:
-                while c.rect.colliderect(c2) and not c == c2:
+            for C in cars:
+                while c.rect.colliderect(C) and not c == C:
                     c.rect.x -= 1
-                    c2.rect.x += 1
+                    C.rect.x += 1
         display.flip()
 
 
