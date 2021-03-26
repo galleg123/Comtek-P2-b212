@@ -16,8 +16,8 @@ clients = 0
 class client(threading.Thread):                                             #class definition, inherits from the threading class
     def __init__(self):                                                     #initialisation method which is run when class is initialized
         threading.Thread.__init__(self)                                     #when the object itself is initialized, initialize the thread
-        self.SERVER_IP = "192.168.0.100"                                    #String containing the IP address of the host server
-        #self.SERVER_IP = "62.107.59.124"
+        #self.SERVER_IP = "192.168.0.100"                                    #String containing the IP address of the host server
+        self.SERVER_IP = "62.107.59.124"
         self.SERVER_PORT = 8888                                             #Integer containing the port number of the host server
         self.BUFFER_SIZE = 1024                                             #buffer size determining how much data is read at a time
         self.s = socket(AF_INET, SOCK_STREAM)                               #the socket object is created
