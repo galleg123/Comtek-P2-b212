@@ -8,6 +8,7 @@ from pygame import (
     event,
     QUIT,
     transform,
+    font
 )
 from pygame import constants
 from pygame.constants import TEXTINPUT
@@ -61,7 +62,7 @@ class car:
                 self.rect.y += (roadheight) * (roads)                   #
                 self.rect.x = 1920 - (self.rect.width/2)                # down to here is the same as the above, except for the other end of the road
 
-    def __init__(self, roads, Image, screen, width, roadheight):        # Create an init that can be used to create more cars, as used for creating ai cars and player controlled cars
+    def __init__(self, roads, Image, screen, width, roadheight, num):        # Create an init that can be used to create more cars, as used for creating ai cars and player controlled cars
         screen.blit(self.img, self.rect)                                # Load in the car
         self.img = image.load(Image)                                    # Give the car an image
         self.img = transform.scale(
@@ -70,3 +71,4 @@ class car:
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
         self.maxspeed = random.randint(98,130)                              # Speed between 98, and  130
+        self.text = font.Font("freesansbold.ttf", 32).render(num.__str__() + ". bil", True, (0,0,0))

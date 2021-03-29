@@ -7,60 +7,60 @@ from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
 
 #Global variables
-data = "placeholder"                                                        #variable with a placeholder value to be uploaded to the server
-locations = {}                                                              #Dictionary which is accessed for the purposes of synchronizing all clients
-clientNum = 0                                                               #The specific number each client has
+data = "placeholder"                                                        
+locations = {}                                                              
+clientNum = 0                                                               
 clients = 0
 
 # seperate thread to keep the connection to the server going while the simulation is running
-class client(threading.Thread):                                             #class definition, inherits from the threading class
-    def __init__(self):                                                     #initialisation method which is run when class is initialized
-        threading.Thread.__init__(self)                                     #when the object itself is initialized, initialize the thread
-        #self.SERVER_IP = "192.168.0.100"                                    #String containing the IP address of the host server
-        self.SERVER_IP = "62.107.59.124"
-        self.SERVER_PORT = 8888                                             #Integer containing the port number of the host server
-        self.BUFFER_SIZE = 1024                                             #buffer size determining how much data is read at a time
-        self.s = socket(AF_INET, SOCK_STREAM)                               #the socket object is created
-        self.s.connect((self.SERVER_IP, self.SERVER_PORT))                  #Connects the socket to the server IP on the specific port
+class client(threading.Thread):                                             
+    def __init__(self):                                                     
+        threading.Thread.__init__(self)                                     
+        self.SERVER_IP = "192.168.0.100"                                    
+        #self.SERVER_IP = "62.107.59.124"
+        self.SERVER_PORT = 8888                                             
+        self.BUFFER_SIZE = 1024                                             
+        self.s = socket(AF_INET, SOCK_STREAM)                               
+        self.s.connect((self.SERVER_IP, self.SERVER_PORT))                  
 
 #Method that is run when the thread is started
-    def run(self):                                                          #method definition
-        global data                                                         #Import the global variable data
-        global locations                                                    #Import locations
-        global clientNum                                                    #Import clientNum
+    def run(self):                                                          
+        global data                                                         
+        global locations                                                    
+        global clientNum                                                    
         global clients
-        self.joined = False                                                 #create local variable to determine if the client has joined the session
-        while True:                                                         #run an infinite loop until broken out of or returned
-            In = input("write join to join a session: ")                    #wait until user writes a string into the terminal
-            if In.__len__() > 0:                                            #check if the received string isn't empty
-                self.s.send(bytes(In, 'utf-8'))                             #send the string to the host server
-                print("data sent.")                                         #debug
-            if In == "join":                                                #if the sent string is join, do the following
-                self.joined = True                                          #set local boolean to true
-                break                                                       #break out of the infinite loop and continue to the simulation
-            if In == "quit":                                                #if the sent string is quit do the following
-                self.s.close()                                              #close socket
-                return                                                      #return out of the socket, this is to avoid exceptions when closing the window
+        self.joined = False                                                 
+        while True:                                                         
+            In = input("write join to join a session: ")                    
+            if In.__len__() > 0:                                            
+                self.s.send(bytes(In, 'utf-8'))                             
+                print("data sent.")                                         
+            if In == "join":                                                
+                self.joined = True                                          
+                break                                                       
+            if In == "quit":                                                
+                self.s.close()                                              
+                return                                                      
 
-        self.started = False                                                #local variable used to determine whether the host has started the simulation or not
-        while self.joined:                                                  #run while loop while the client is connected
-            r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')               #receive an encoded string from the host server and decode it
-            if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":    #check if it's a placeholder or another keyword
+        self.started = False                                                
+        while self.joined:                                                  
+            r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')               
+            if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":    
                 #print(r)
-                dataArray = r.split(";")                                    #decode the string into an array of dictionary formatted variables
-                for d in dataArray:                                         #run for loop for every entry in the array
-                    locations[int(d.split(":")[0])] = d.split(":")[1]       #seperate each array entry into key and value pairs and create a dictionary
-            if r.split(",")[0] == "start":                                  #if the received data is start followed by a seperator
-                clientNum = r.split(",")[1]                                 #set client number to the number after the seperator
+                dataArray = r.split(";")                                    
+                for d in dataArray:                                         
+                    locations[int(d.split(":")[0])] = d.split(":")[1]       
+            if r.split(",")[0] == "start":                                  
+                clientNum = int(r.split(",")[1]) -1                         
                 clients = int(r.split(",")[2])
-                self.started = True                                         #set local variable for determining simulation state to true
-            if data.__len__() > 0:                                          #if there is data to send to the host server, send it
-                self.s.send(bytes(data, 'utf-8'))                           #send the data to the host server
+                self.started = True                                         
+            if data.__len__() > 0:                                          
+                self.s.send(bytes(data, 'utf-8'))                           
 
     #method that is called to close the connection and stop the program, used to avoid exceptions
-    def stop(self):                     #method definition
-        self.s.close()                  #close the socket
-        self.joined = False             #set local variable to false
+    def stop(self):                     
+        self.s.close()                  
+        self.joined = False             
 
 
 
@@ -78,11 +78,11 @@ def simulation():
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
     for i in range(clients):
-        cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height))
+        cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i))
     for i in range(numOfCars):
         cars.append(car(
-            numOfRoads, "assets\\car2.png", screen, width, Road.rect.height))
-    Car = cars[0]
+            numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
+    Car = cars[clientNum]
 
     run = True
 
@@ -105,10 +105,11 @@ def simulation():
         if locations.__len__() == cars.__len__():
             for i in range(1, cars.__len__()):
                 location = locations[i].split("(")
-                print(location)
-                cars[i].speed = float(location[0])
-                cars[i].rect.center = (int(location[1].strip(")").split(
-                    ",")[0]), int(location[1].strip(")").split(",")[1]))
+                if not location[0] == clients:
+                    print(location)
+                    cars[i].speed = float(location[0])
+                    cars[i].rect.center = (int(location[1].strip(")").split(
+                        ",")[0]), int(location[1].strip(")").split(",")[1]))
         print()
 
         screen.fill([0, 0, 0])
@@ -124,6 +125,10 @@ def simulation():
         for c in cars:
             c.outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(c.img, c.rect)
+            textrect = c.text.get_rect()
+            textrect.center = c.rect.center
+            textrect.top = c.rect.bottom
+            screen.blit(c.text, textrect)
             for C in cars:
                 while c.rect.colliderect(C) and not c == C:
                     c.rect.x -= 1
