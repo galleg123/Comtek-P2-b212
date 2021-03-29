@@ -106,7 +106,7 @@ def simulation():
         if locations.__len__() == cars.__len__():
             for i in range(cars.__len__()):
                 location = locations[i].split("(")
-                if not location[0] == clientNum:
+                if not i == clientNum:
                     print(location)
                     cars[i].speed = float(location[0])
                     cars[i].rect.center = (int(location[1].strip(")").split(
