@@ -104,7 +104,7 @@ def simulation():
             Car.movement(e)
         data = Car.speed.__str__() + "," + Car.rect.center.__str__()
         if locations.__len__() == cars.__len__():
-            for i in range(1, cars.__len__()):
+            for i in range(cars.__len__()):
                 location = locations[i].split("(")
                 if not location[0] == clientNum:
                     print(location)

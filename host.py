@@ -118,7 +118,7 @@ def simulation():
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
 
-    while display.get_active():
+    while display.get_active() and clients.__len__() > 0:
         numOfRoads = 0
         Road.rect.y = 0
 
