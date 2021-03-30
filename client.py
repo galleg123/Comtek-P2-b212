@@ -12,11 +12,13 @@ locations = {}
 clientNum = 0                                                               
 clients = 0
 
+l = threading.Lock()
+
 # seperate thread to keep the connection to the server going while the simulation is running
 class client(threading.Thread):                                             
     def __init__(self):                                                     
         threading.Thread.__init__(self)                                     
-        self.SERVER_IP = "192.168.0.100"                                    
+        self.SERVER_IP = "10.225.171.52"                                    
         #self.SERVER_IP = "62.107.59.124"
         self.SERVER_PORT = 8888                                             
         self.BUFFER_SIZE = 1024                                             
@@ -103,6 +105,7 @@ def simulation():
                     upload.start()
             Car.movement(e)
         data = Car.speed.__str__() + "," + Car.rect.center.__str__()
+        l.acquire()
         if locations.__len__() == cars.__len__():
             for i in range(cars.__len__()):
                 location = locations[i].split("(")
@@ -111,6 +114,7 @@ def simulation():
                     cars[i].speed = float(location[0])
                     cars[i].rect.center = (int(location[1].strip(")").split(
                         ",")[0]), int(location[1].strip(")").split(",")[1]))
+        l.release()
         print()
 
         screen.fill([0, 0, 0])
@@ -130,10 +134,13 @@ def simulation():
             textrect.center = c.rect.center
             textrect.top = c.rect.bottom
             screen.blit(c.text, textrect)
-            for C in cars:
-                while c.rect.colliderect(C) and not c == C:
-                    c.rect.x -= 1
-                    C.rect.x += 1
+            if Car.rect.colliderect(c) and not Car == c:
+                if Car.rect.x > c.rect.x:
+                    c.speed = Car.speed
+                    Car.rect.left = c.rect.right
+                elif Car.rect.x < c.rect.x:
+                    Car.speed = c.speed
+                    Car.rect.right = c.rect.left
         display.flip()
 
 

@@ -18,6 +18,8 @@ font = font.Font("freesansbold.ttf", 32)
 data = "placeholder"                                                        
 locations = {}                                                              
 
+l = threading.Lock()
+
 #The following class handles incoming sockets and seperates these into their own threads
 class socketServer(threading.Thread):                                       
     def __init__(self):                                                     
@@ -137,12 +139,14 @@ def simulation():
             data += (";" + (i + 1).__str__() + ":" +
                      cars[i + 1].speed.__str__() + cars[i + 1].rect.center.__str__())
         print(locations)
+        l.acquire()
         for i in range(locations.__len__()):
             if not locations.get(i) == "placeholder":
                 location = locations.get(i).split(",")
                 cars[i].speed = float(location[0])
                 cars[i].rect.center = (
                     int(location[1].strip("(")), int(location[2].strip(")")))
+        l.release()
         screen.fill([0, 0, 0])
         # Move the car
         for c in cars:
@@ -164,9 +168,19 @@ def simulation():
             textrect.top = c.rect.bottom
             screen.blit(c.text, textrect)
             for C in cars:
-                while c.rect.colliderect(C) and not c == C:
-                    c.rect.x -= 1
-                    C.rect.x += 1
+                while c.rect.colliderect(C) and not c == C and not c.num < clients.__len__():
+                    print(c.num.__str__() + "collided with" + C.num.__str__())
+                    if c.rect.left <= C.rect.left:
+                        c.speed = C.speed
+                        c.rect.x -= 5
+                        #C.rect.x += 5
+                    elif c.rect.right > C.rect.right:
+                        C.speed = c.speed
+                        #c.rect.x += 5
+                        C.rect.x -= 5
+            if c.speed < c.maxspeed:
+                #accelerate cars if there are none in front of it
+                pass
         display.flip()
 
 
