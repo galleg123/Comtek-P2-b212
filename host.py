@@ -9,7 +9,7 @@ from classes.road import road
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font
 
 init()                                                                      
-size = width, height = 1920, 1000                                           
+size = width, height = 1000, 1000                                           
 screen = display.set_mode(size)                                             
 clients = []                                                                
 simState = False                                                            
@@ -181,6 +181,8 @@ def simulation():
                 if c.speed < c.maxspeed and not frontrect.colliderect(C) and not c == C:
                     #accelerate cars if there are none in front of it
                     c.movement("d")
+                else:
+                    c.movement(" ")
         display.flip()
 
 

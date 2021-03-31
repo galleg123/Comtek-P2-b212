@@ -22,7 +22,7 @@ class client(threading.Thread):
         #self.SERVER_IP = "62.107.59.124"
         self.SERVER_IP = "192.168.1.45"
 
-        
+
         self.SERVER_PORT = 8888                                             
         self.BUFFER_SIZE = 1024                                             
         self.s = socket(AF_INET, SOCK_STREAM)                               
@@ -72,7 +72,7 @@ class client(threading.Thread):
 def simulation():
     global clientNum
     init()
-    size = width, height = 1920, 1000
+    size = width, height = 1000, 1000
     display.set_caption("car: " + clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
