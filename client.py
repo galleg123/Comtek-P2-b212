@@ -99,11 +99,8 @@ def simulation():
 
                 run = False
             if e.type == TEXTINPUT:
-                if e.text == "u":
-                    upload = uploadThread(data=[int(cars[1].speed), int(
-                        cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
-                    upload.start()
-            Car.movement(e)
+                txt = e.text
+                Car.movement(txt)
         data = Car.speed.__str__() + "," + Car.rect.center.__str__()
         l.acquire()
         if locations.__len__() == cars.__len__():
@@ -136,10 +133,10 @@ def simulation():
             screen.blit(c.text, textrect)
             if Car.rect.colliderect(c) and not Car == c:
                 if Car.rect.x > c.rect.x:
-                    c.speed = Car.speed
+                    c.movement(" ")
                     Car.rect.left = c.rect.right
                 elif Car.rect.x < c.rect.x:
-                    Car.speed = c.speed
+                    Car.movement(" ")
                     Car.rect.right = c.rect.left
         display.flip()
 

@@ -169,18 +169,18 @@ def simulation():
             screen.blit(c.text, textrect)
             for C in cars:
                 while c.rect.colliderect(C) and not c == C and not c.num < clients.__len__():
-                    print(c.num.__str__() + "collided with" + C.num.__str__())
                     if c.rect.left <= C.rect.left:
-                        c.speed = C.speed
+                        c.movement(" ")
                         c.rect.x -= 5
                         #C.rect.x += 5
                     elif c.rect.right > C.rect.right:
-                        C.speed = c.speed
+                        C.movement(" ")
                         #c.rect.x += 5
                         C.rect.x -= 5
-            if c.speed < c.maxspeed:
-                #accelerate cars if there are none in front of it
-                pass
+                frontrect = c.rect
+                if c.speed < c.maxspeed and not frontrect.colliderect(C) and not c == C:
+                    #accelerate cars if there are none in front of it
+                    c.movement("d")
         display.flip()
 
 

@@ -26,10 +26,7 @@ class car:
     rect = img.get_rect()
     rect.width += 10
 
-    def movement(self, e):                                                  #Define movement for player controlled car
-        if e.type == TEXTINPUT:                                             #Start event listener for TEXTINPUT
-            txt = e.text                                                    #Definer txt som eventtypen text
-
+    def movement(self, txt):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
                 if self.speed < self.maxspeed:                              #If speed is under 44, and d is pressed gain speed with a given acceleration
                     self.acceleration = 0.2 
@@ -71,6 +68,6 @@ class car:
         self.rect = self.img.get_rect()     
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
-        self.maxspeed = random.randint(98,130)                              # Speed between 98, and  130
+        self.maxspeed = random.randint(10,10)                              # Speed between 98, and  130
         self.text = font.Font("freesansbold.ttf", 32).render(num.__str__() + ". bil", True, (0,0,0))
         self.num = num
