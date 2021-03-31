@@ -72,7 +72,7 @@ class client(threading.Thread):
 def simulation():
     global clientNum
     init()
-    size = width, height = 1000, 1000
+    size = width, height = 1920, 1000
     display.set_caption("car: " + clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
