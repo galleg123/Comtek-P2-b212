@@ -138,7 +138,7 @@ def simulation():
                 elif Car.rect.x < c.rect.x:
                     Car.movement(" ")
                     Car.rect.right = c.rect.left
-        display.flip()
+        display.flip() 
 
 
 def main():
