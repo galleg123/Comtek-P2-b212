@@ -25,7 +25,7 @@ def simulation(Client):
         numOfRoads += 1
     for i in range(Client.clients):
         cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i))
-    for i in range(numOfCars):
+    for i in range(Client.clients,numOfCars+Client.clients):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
     Car = cars[Client.clientNum]

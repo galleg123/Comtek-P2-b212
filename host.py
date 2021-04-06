@@ -31,7 +31,7 @@ def simulation(Host):
     for i in range(Host.clients.__len__()):
         Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i)
         cars.append(Car)
-    for i in range(numOfCars):
+    for i in range(Host.clients.__len__(),numOfCars+Host.clients.__len__()):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
 
@@ -88,12 +88,12 @@ def simulation(Host):
                         C.movement(" ")
                         #c.rect.x += 5
                         C.rect.x -= 5
-                frontpoint = (c.rect.right + 100,c.rect.centery)
+                frontpoint = (C.rect.left - 150,C.rect.centery)
                 pointimg = image.load("assets\\point.png")
                 pointimgrect = pointimg.get_rect()
                 pointimgrect.center = frontpoint
                 screen.blit(pointimg, pointimgrect)
-                if c.speed < c.maxspeed and not C.rect.colliderect(pointimgrect):
+                if c.speed < c.maxspeed and not c.rect.colliderect(pointimgrect) and C != c:
                     print("accelerating car {}".format(c.num))
                     #accelerate cars if there are none in front of it
                     c.movement("d")
