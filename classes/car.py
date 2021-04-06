@@ -24,7 +24,6 @@ class car:
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])     #Change the size of car
     rect = img.get_rect()
-    rect.width += 10
 
     def movement(self, txt):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
@@ -69,5 +68,5 @@ class car:
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
         self.maxspeed = random.randint(10,10)                              # Speed between 98, and  130
-        self.text = font.Font("freesansbold.ttf", 32).render(num.__str__() + ". bil", True, (0,0,0))
+        self.text = font.Font("freesansbold.ttf", 32).render("{}. bil".format(num), True, (0,0,0))
         self.num = num

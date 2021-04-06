@@ -132,7 +132,6 @@ def simulation():
                     upload = uploadThread(data=[int(cars[1].speed), int(
                         cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
                     upload.start()
-            #Car.movement(e)
 
         data = "0:" + cars[0].speed.__str__() + cars[0].rect.center.__str__()
         for i in range(cars.__len__() - 1):
@@ -177,8 +176,13 @@ def simulation():
                         C.movement(" ")
                         #c.rect.x += 5
                         C.rect.x -= 5
-                frontrect = c.rect
-                if c.speed < c.maxspeed and not frontrect.colliderect(C) and not c == C:
+                frontpoint = (c.rect.right + 100,c.rect.centery)
+                pointimg = image.load("assets\\point.png")
+                pointimgrect = pointimg.get_rect()
+                pointimgrect.center = frontpoint
+                screen.blit(pointimg, pointimgrect)
+                if c.speed < c.maxspeed and not C.rect.colliderect(pointimgrect):
+                    print("accelerating car {}".format(c.num))
                     #accelerate cars if there are none in front of it
                     c.movement("d")
         display.flip()
