@@ -1,79 +1,19 @@
 from socket import *
 import threading
 from Network.thread import uploadThread
+from Network.client import client
 
 from classes.car import car
 from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
 
 #Global variables
-data = "placeholder"                                                        
-locations = {}                                                              
-clientNum = 0                                                               
-clients = 0
-
 l = threading.Lock()
 
-# seperate thread to keep the connection to the server going while the simulation is running
-class client(threading.Thread):                                             
-    def __init__(self):                                                     
-        threading.Thread.__init__(self)                                     
-        self.SERVER_IP = "10.225.171.52"                                    #thomas
-        #self.SERVER_IP = "62.107.59.124"                                   #kenneth
-        #self.SERVER_IP = "192.168.1.45"                                    #mikkel
-
-
-        self.SERVER_PORT = 8888                                             
-        self.BUFFER_SIZE = 1024                                             
-        self.s = socket(AF_INET, SOCK_STREAM)                               
-        self.s.connect((self.SERVER_IP, self.SERVER_PORT))                  
-
-#Method that is run when the thread is started
-    def run(self):                                                          
-        global data                                                         
-        global locations                                                    
-        global clientNum                                                    
-        global clients
-        self.joined = False                                                 
-        while True:                                                         
-            In = input("write join to join a session: ")                    
-            if In.__len__() > 0:                                            
-                self.s.send(bytes(In, 'utf-8'))                             
-                print("data sent.")                                         
-            if In == "join":                                                
-                self.joined = True                                          
-                break                                                       
-            if In == "quit":                                                
-                self.s.close()                                              
-                return                                                      
-
-        self.started = False                                                
-        while self.joined:                                                  
-            r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')               
-            if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":    
-                #print(r)
-                dataArray = r.split(";")                                    
-                for d in dataArray:                                         
-                    locations[int(d.split(":")[0])] = d.split(":")[1]       
-            if r.split(",")[0] == "start":                                  
-                clientNum = int(r.split(",")[1]) -1                         
-                clients = int(r.split(",")[2])
-                self.started = True                                         
-            if data.__len__() > 0:                                          
-                self.s.send(bytes(data, 'utf-8'))                           
-
-    #method that is called to close the connection and stop the program, used to avoid exceptions
-    def stop(self):                     
-        self.s.close()                  
-        self.joined = False             
-
-
-
-def simulation():
-    global clientNum
+def simulation(Client):
     init()
     size = width, height = 1920, 1000
-    display.set_caption("car: " + clientNum.__str__())
+    display.set_caption("car: " + Client.clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
     numOfCars = 10
@@ -83,12 +23,12 @@ def simulation():
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-    for i in range(clients):
+    for i in range(Client.clients):
         cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i))
     for i in range(numOfCars):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
-    Car = cars[clientNum]
+    Car = cars[Client.clientNum]
 
     run = True
 
@@ -104,12 +44,12 @@ def simulation():
             if e.type == TEXTINPUT:
                 txt = e.text
                 Car.movement(txt)
-        data = Car.speed.__str__() + "," + Car.rect.center.__str__()
+        Client.data = Car.speed.__str__() + "," + Car.rect.center.__str__()
         l.acquire()
-        if locations.__len__() == cars.__len__():
+        if Client.locations.__len__() == cars.__len__():
             for i in range(cars.__len__()):
-                location = locations[i].split("(")
-                if not i == clientNum:
+                location = Client.locations[i].split("(")
+                if not i == Client.clientNum:
                     print(location)
                     cars[i].speed = float(location[0])
                     cars[i].rect.center = (int(location[1].strip(")").split(
@@ -149,7 +89,7 @@ def main():
     c.start()
     while True:
         if c.joined and c.started:
-            simulation()
+            simulation(c)
             c.stop()
             break
     print("main thread finished")
