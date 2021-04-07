@@ -17,17 +17,14 @@ class client_connection(threading.Thread):
     def run(self):                                                            
         while True:                                                     
             self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")      
-            if self.addr[0] == "127.0.0.1":                             
-                return                                                  
+            if self.r == "quit":
+                print("Client on " + threading.Thread.getName(self) + " ended the connection by keyword.")
+                return
             elif not self.r == "":                                      
                 print(self.r)                                           
                 if self.r == "join":                                    
                     self.handler.clients.append(self)                                 
-                    break                                               
-            elif self.r == "quit":                                      
-                print("Client on " + threading.Thread.getName(self) +   
-                      " ended the connection by keyword.")
-                return                                                  
+                    break                                      
         started = False                                                 
         while True:                                                     
             if self.handler.simState:                                                
