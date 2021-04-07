@@ -19,24 +19,29 @@ class car:
     acceleration = 0
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
+    minAcceleration = 0.10
     maxspeed = 0                                                            #Max speed for the car, is set random between 2 values
     img = image.load("assets\\car.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])     #Change the size of car
     rect = img.get_rect()
-#TODO slow down acceleration
-    def movement(self, txt):                                                  #Define movement for player controlled car
+    rect.width += 10
+
+    def movement(self, e):                                                  #Define movement for player controlled car
+        if e.type == TEXTINPUT:                                             #Start event listener for TEXTINPUT
+            txt = e.text                                                    #Definer txt som eventtypen text
+
             if txt == "d":                                                  #If d is pressed
                 if self.speed < self.maxspeed:                              #If speed is under 44, and d is pressed gain speed with a given acceleration
-                    acceleration = 0.2 
-                    self.speed =self.speed+(self.speed**acceleration)
+                    self.acceleration = 0.2 
+                    self.speed =self.speed+((self.speed**self.acceleration)+self.minAcceleration-1)
                 if self.speed == 0:                                         #If speed is 0, and d is pressed, change the speed to 2 so that the above code will work
                     self.speed = 2
 
             if txt == " ":                                                  #Brake function, when "space" is pressed
                 if self.speed > 0:                                          # If the speed is over 0 change the acceleration and use it to brake
-                    acceleration = 0.5
-                    self.speed =self.speed-(self.speed**acceleration)
+                    self.acceleration = 0.5
+                    self.speed =self.speed-(self.speed**self.acceleration)
                 if self.speed < 0:                                          # If speed goes below 0, change it back to 0 so it doesn't drive backwards
                     self.speed = 0
 
@@ -59,6 +64,8 @@ class car:
                 self.rect.y += (roadheight) * (roads)                   #
                 self.rect.x = 1920 - (self.rect.width/2)                # down to here is the same as the above, except for the other end of the road
 
+
+
     def __init__(self, roads, Image, screen, width, roadheight, num):        # Create an init that can be used to create more cars, as used for creating ai cars and player controlled cars
         screen.blit(self.img, self.rect)                                # Load in the car
         self.img = image.load(Image)                                    # Give the car an image
@@ -67,6 +74,6 @@ class car:
         self.rect = self.img.get_rect()     
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
-        self.maxspeed = random.randint(10,11)                              # Speed between 98, and  130
-        self.text = font.Font("freesansbold.ttf", 32).render("{}. car".format(num), True, (0,0,0))
+        self.maxspeed = random.randint(10,10)                              # Speed between 98, and  130
+        self.text = font.Font("freesansbold.ttf", 32).render(num.__str__() + ". bil", True, (0,0,0))
         self.num = num
