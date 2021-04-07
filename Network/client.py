@@ -9,6 +9,7 @@ class client(threading.Thread):
         #self.SERVER_IP = "62.107.59.124"                                   #kenneth
         self.SERVER_IP = "192.168.1.45"                                    #mikkel
         #self.SERVER_IP = "192.168.50.206"                                   #christian
+        #self.SERVER_IP = "127.0.0.1"                                       #localhost, use this for debug
 
         self.SERVER_PORT = 8888                                             
         self.BUFFER_SIZE = 1024                                             
