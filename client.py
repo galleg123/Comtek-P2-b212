@@ -16,7 +16,7 @@ def simulation(Client):
     display.set_caption("car: " + Client.clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
-    numOfCars = 10
+    numOfCars = 20
     cars = []
     Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):
@@ -25,7 +25,7 @@ def simulation(Client):
         numOfRoads += 1
     for i in range(Client.clients):
         cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i))
-    for i in range(Client.clients,numOfCars+Client.clients):
+    for i in range(Client.clients,numOfCars):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
     Car = cars[Client.clientNum]

@@ -1,3 +1,4 @@
+import random
 from socket import AF_INET, SOCK_STREAM, socket
 import socketserver
 import sys
@@ -18,9 +19,11 @@ font = font.Font("freesansbold.ttf", 32)
 l = threading.Lock()
 
 def simulation(Host):
+    braking = False
     Host.simState = True
     numOfRoads = 0
-    numOfCars = 10
+    numOfCars = 20
+    counter = 0
 
     cars = []
     Road = road()
@@ -31,7 +34,7 @@ def simulation(Host):
     for i in range(Host.clients.__len__()):
         Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i)
         cars.append(Car)
-    for i in range(Host.clients.__len__(),numOfCars+Host.clients.__len__()):
+    for i in range(Host.clients.__len__(),numOfCars):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
     rl = []
@@ -52,11 +55,14 @@ def simulation(Host):
                     upload = uploadThread(data=[int(cars[1].speed), int(
                         cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
                     upload.start()
-        #TODO: add header to trigger jam 
+                if e.text == "b" and not braking:
+                    print("braking")
+                    rand = random.randint(1,cars.__len__()-1)
+                    brakingcar = cars[rand]
+                    braking = True
         Host.data = "0:{}{}".format(cars[0].speed.__str__(), cars[0].rect.center.__str__())
         for i in range(cars.__len__() - 1):
             Host.data += (";{}:{}{}".format((i + 1).__str__(), cars[i + 1].speed.__str__(), cars[i + 1].rect.center.__str__()))
-        print(Host.locations)
         l.acquire()
         for i in range(Host.locations.__len__()):
             if not Host.locations.get(i) == "placeholder":
@@ -99,16 +105,33 @@ def simulation(Host):
                 print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
+        while braking and brakingcar.speed > 0:
+            brakingcar.movement(" ")
+        counter += 1
+        if counter == 100:
+            braking = False
+            counter = 0
         
         display.flip()
 
 
 def menu(Host):
     screen.fill((255, 255, 255))
-    square = image.load("assets\\start_button.png")
-    squarerect = square.get_rect()
-    squarerect.center = screen.get_rect().center
-    screen.blit(square, squarerect)
+    start = image.load("assets\\start_button.png")
+    start = transform.scale(start,(int(start.get_width()/2),int(start.get_height()/2)))
+    cacc = image.load("assets\\Cacc_simulation.png")
+    cacc = transform.scale(cacc,(int(cacc.get_width()/2),int(cacc.get_height()/2)))
+    manual = image.load("assets\\manual_simulation.png")
+    manual = transform.scale(manual,(int(manual.get_width()/2),int(manual.get_height()/2)))
+    startrect = start.get_rect()
+    caccrect = cacc.get_rect()
+    manualrect = manual.get_rect()
+    startrect.center = screen.get_rect().center
+    caccrect.center = (screen.get_rect().centerx/2,screen.get_rect().centery/2)
+    manualrect.center = (screen.get_rect().centerx + screen.get_rect().centerx/2, screen.get_rect().centery/2)
+    screen.blit(start, startrect)
+    screen.blit(cacc,caccrect)
+    screen.blit(manual,manualrect)
     numClients = font.render(
         "total clients: " + Host.clients.__len__().__str__(), True, (0, 0, 0))
     numClientsRect = numClients.get_rect()
@@ -116,8 +139,15 @@ def menu(Host):
     numClientsRect.centerx = screen.get_rect().centerx
     screen.blit(numClients, numClientsRect)
     for e in event.get():
-        if e.type == MOUSEBUTTONDOWN and squarerect.collidepoint(mouse.get_pos()):
-            Host.simState = True
+        if e.type == MOUSEBUTTONDOWN:
+            if startrect.collidepoint(mouse.get_pos()):
+                Host.simState = True
+            if caccrect.collidepoint(mouse.get_pos()):
+                #TODO write a function that will change the mode to automatic mode
+                pass
+            if manualrect.collidepoint(mouse.get_pos()):
+                #TODO write a function that will change the mode to manual mode
+                pass
         if e.type == QUIT:
             Host.simState = True
     display.flip()

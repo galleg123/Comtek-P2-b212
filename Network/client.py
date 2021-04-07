@@ -41,7 +41,7 @@ class client(threading.Thread):
             if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":    
                 #print(r)
                 dataArray = r.split(";")                                    
-                for d in dataArray:                                         
+                for d in dataArray:
                     self.locations[int(d.split(":")[0])] = d.split(":")[1]       
             if r.split(",")[0] == "start":                                  
                 self.clientNum = int(r.split(",")[1]) -1                         
