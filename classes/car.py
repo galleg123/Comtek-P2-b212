@@ -20,16 +20,18 @@ class car:
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     maxspeed = 0                                                            #Max speed for the car, is set random between 2 values
+    minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
     img = image.load("assets\\car.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])     #Change the size of car
     rect = img.get_rect()
 #TODO slow down acceleration
+
     def movement(self, txt):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
                 if self.speed < self.maxspeed:                              #If speed is under 44, and d is pressed gain speed with a given acceleration
                     acceleration = 0.2 
-                    self.speed =self.speed+(self.speed**acceleration)
+                    self.speed =self.speed+((self.speed**acceleration)+self.minAcceleration-1)
                 if self.speed == 0:                                         #If speed is 0, and d is pressed, change the speed to 2 so that the above code will work
                     self.speed = 2
 

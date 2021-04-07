@@ -5,9 +5,9 @@ from socket import *
 class client(threading.Thread):                                             
     def __init__(self):                                                     
         threading.Thread.__init__(self)                                     
-        self.SERVER_IP = "10.225.171.52"                                    #thomas
+        #self.SERVER_IP = "10.225.171.52"                                   #thomas
         #self.SERVER_IP = "62.107.59.124"                                   #kenneth
-        #self.SERVER_IP = "192.168.1.45"                                    #mikkel
+        self.SERVER_IP = "192.168.1.45"                                    #mikkel
 
 
         self.SERVER_PORT = 8888                                             
