@@ -35,7 +35,6 @@ def simulation(Client):
     while run and display.get_active():
         numOfRoads = 0
         Road.rect.y = 0
-        global data
 
         for e in event.get():
             if e.type == QUIT:

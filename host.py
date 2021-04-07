@@ -24,7 +24,7 @@ def simulation(Host):
 
     cars = []
     Road = road()
-    while ((Road.rect.y + Road.rect.height) <= 1000):
+    while Road.rect.y + Road.rect.height <= 1000:
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
@@ -34,7 +34,12 @@ def simulation(Host):
     for i in range(Host.clients.__len__(),numOfCars+Host.clients.__len__()):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
-
+    rl = []
+    for c in cars:
+        pt = image.load("assets\\point.png")
+        ptrect = pt.get_rect()
+        ptrect.center = (c.rect.left - c.rect.width, c.rect.centery)
+        rl.append(ptrect)
     while display.get_active() and Host.clients.__len__() > 0:
         numOfRoads = 0
         Road.rect.y = 0
@@ -47,11 +52,10 @@ def simulation(Host):
                     upload = uploadThread(data=[int(cars[1].speed), int(
                         cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
                     upload.start()
-
-        Host.data = "0:" + cars[0].speed.__str__() + cars[0].rect.center.__str__()
+        #TODO: add header to trigger jam 
+        Host.data = "0:{}{}".format(cars[0].speed.__str__(), cars[0].rect.center.__str__())
         for i in range(cars.__len__() - 1):
-            Host.data += (";" + (i + 1).__str__() + ":" +
-                     cars[i + 1].speed.__str__() + cars[i + 1].rect.center.__str__())
+            Host.data += (";{}:{}{}".format((i + 1).__str__(), cars[i + 1].speed.__str__(), cars[i + 1].rect.center.__str__()))
         print(Host.locations)
         l.acquire()
         for i in range(Host.locations.__len__()):
@@ -78,6 +82,8 @@ def simulation(Host):
             textrect.center = c.rect.center
             textrect.top = c.rect.bottom
             screen.blit(c.text, textrect)
+            rl[c.num].center = (c.rect.left - c.rect.width, c.rect.centery)
+            screen.blit(pt,rl[c.num])
             for C in cars:
                 while c.rect.colliderect(C) and not c == C and not c.num < Host.clients.__len__():
                     if c.rect.left <= C.rect.left:
@@ -88,15 +94,12 @@ def simulation(Host):
                         C.movement(" ")
                         #c.rect.x += 5
                         C.rect.x -= 5
-                frontpoint = (C.rect.left - 150,C.rect.centery)
-                pointimg = image.load("assets\\point.png")
-                pointimgrect = pointimg.get_rect()
-                pointimgrect.center = frontpoint
-                screen.blit(pointimg, pointimgrect)
-                if c.speed < c.maxspeed and not c.rect.colliderect(pointimgrect) and C != c:
-                    print("accelerating car {}".format(c.num))
-                    #accelerate cars if there are none in front of it
-                    c.movement("d")
+            check = c.rect.collidelist(rl)
+            if c.speed < c.maxspeed and not check > -1:
+                print("accelerating car {}".format(c.num))
+                #accelerate cars if there are none in front of it
+                c.movement("d")
+        
         display.flip()
 
 
