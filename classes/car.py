@@ -29,11 +29,12 @@ class car:
 
     def movement(self, txt):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
+                if self.speed < 1:                                          #If speed under 1, and d is pressed, change the speed to 1 so that the code below will work
+                    self.speed = 1
                 if self.speed < self.maxspeed:                              #If speed is under 44, and d is pressed gain speed with a given acceleration
                     acceleration = 0.2 
-                    self.speed =self.speed+((self.speed**acceleration)+self.minAcceleration-1)
-                if self.speed == 0:                                         #If speed is 0, and d is pressed, change the speed to 2 so that the above code will work
-                    self.speed = 2
+                    self.speed =self.speed+((self.speed**acceleration) + self.minAcceleration - 1)
+                
 
             if txt == " ":                                                  #Brake function, when "space" is pressed
                 if self.speed > 0:                                          # If the speed is over 0 change the acceleration and use it to brake
