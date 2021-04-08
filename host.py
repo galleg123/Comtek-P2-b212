@@ -3,6 +3,7 @@ from socket import AF_INET, SOCK_STREAM, socket
 import socketserver
 import sys
 import threading
+from time import time
 from Network.thread import uploadThread
 from Network.socketServer import socketServer
 
@@ -12,8 +13,8 @@ from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, ev
 
 init()                                                                      
 size = width, height = 1920, 1000                                           
-screen = display.set_mode(size)                                          
-font = font.Font("freesansbold.ttf", 32)                                    
+screen = display.set_mode(size)
+font = font.Font("freesansbold.ttf", 32)
                                                           
 
 l = threading.Lock()
@@ -43,6 +44,8 @@ def simulation(Host):
         ptrect = pt.get_rect()
         ptrect.center = (c.rect.left - c.rect.width, c.rect.centery)
         rl.append(ptrect)
+    fps_start = time()
+    frame_counter = 0
     while display.get_active() and Host.clients.__len__() > 0:
         numOfRoads = 0
         Road.rect.y = 0
@@ -101,10 +104,12 @@ def simulation(Host):
                         #c.rect.x += 5
                         C.rect.x -= 5
             check = c.rect.collidelist(rl)
-            if c.speed < c.maxspeed and not check > -1:
+            if Host.mode == 1 and c.speed < c.maxspeed and not check > -1:
                 print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
+            elif Host.mode == 0 and check != -1:
+                c.speed = cars[check].speed
         while braking and brakingcar.speed > 0:
             brakingcar.movement(" ")
         counter += 1
@@ -112,7 +117,17 @@ def simulation(Host):
             braking = False
             counter = 0
         
+        frame_counter += 1
+        fps_end = time()
+        fps = int(frame_counter / float(fps_end - fps_start))
+        fpstext = font.render("FPS: {}".format(fps), True, (0,0,0))
+        fpstextrect = fpstext.get_rect()
+        fpstextrect.top = screen.get_rect().top
+        fpstextrect.right = screen.get_rect().right
+        screen.blit(fpstext, fpstextrect)
+
         display.flip()
+
 
 
 def menu(Host):
@@ -144,13 +159,17 @@ def menu(Host):
                 Host.simState = True
             if caccrect.collidepoint(mouse.get_pos()):
                 #TODO write a function that will change the mode to automatic mode
+                Host.mode = 0
                 pass
             if manualrect.collidepoint(mouse.get_pos()):
                 #TODO write a function that will change the mode to manual mode
+                Host.mode = 1
                 pass
         if e.type == QUIT:
             Host.simState = True
     display.flip()
+
+
 
 
 def main():

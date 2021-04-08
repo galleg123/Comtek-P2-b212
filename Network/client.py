@@ -46,6 +46,7 @@ class client(threading.Thread):
             if r.split(",")[0] == "start":                                  
                 self.clientNum = int(r.split(",")[1]) -1                         
                 self.clients = int(r.split(",")[2])
+                self.mode = int(r.split(",")[3]) #0 = CACC, 1 = Manual
                 self.started = True                                         
             if self.data.__len__() > 0:                                          
                 self.s.send(bytes(self.data, 'utf-8'))                           

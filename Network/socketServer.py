@@ -15,6 +15,7 @@ class socketServer(threading.Thread):
         self.locations = {}
         self.simState = False
         self.clients = []
+        self.mode = 0 #0 = CACC mode, 1 = Manual mode
 
 #this method is run whenever the start method is called and a thread is created
     def run(self):                                                          

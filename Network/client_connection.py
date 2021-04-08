@@ -30,7 +30,7 @@ class client_connection(threading.Thread):
             if self.handler.simState:                                                
                 if not started:                                         
                     self.c.send(
-                        bytes("start," + self.num.__str__() + "," + self.handler.clients.__len__().__str__(), 'utf-8'))  
+                        bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), 'utf-8'))  
                     print("start")                                      
                     started = True                                      
                 self.c.send(bytes(self.handler.data, 'utf-8'))                       

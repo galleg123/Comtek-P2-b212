@@ -1,11 +1,12 @@
 from socket import *
 import threading
+from time import time
 from Network.thread import uploadThread
 from Network.client import client
 
 from classes.car import car
 from classes.road import road
-from pygame import TEXTINPUT, image, display, init, event, QUIT, transform
+from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font
 
 #Global variables
 l = threading.Lock()
@@ -31,7 +32,8 @@ def simulation(Client):
     Car = cars[Client.clientNum]
 
     run = True
-
+    frame_counter = 0
+    fps_start = time()
     while run and display.get_active():
         numOfRoads = 0
         Road.rect.y = 0
@@ -80,6 +82,16 @@ def simulation(Client):
                 elif Car.rect.x < c.rect.x:
                     Car.movement(" ")
                     Car.rect.right = c.rect.left
+        
+        frame_counter += 1
+        fps_end = time()
+        fps = int(frame_counter / float(fps_end - fps_start))
+        fpstext = font.Font("freesansbold.ttf", 32).render("FPS: {}".format(fps), True, (0,0,0))
+        fpstextrect = fpstext.get_rect()
+        fpstextrect.top = screen.get_rect().top
+        fpstextrect.right = screen.get_rect().right
+        screen.blit(fpstext, fpstextrect)
+
         display.flip() 
 
 
