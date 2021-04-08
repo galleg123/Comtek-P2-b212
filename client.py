@@ -13,6 +13,7 @@ l = threading.Lock()
 
 def simulation(Client):
     init()
+    f = font.Font("freesansbold.ttf", 32)
     size = width, height = 1920, 1000
     display.set_caption("car: " + Client.clientNum.__str__())
     screen = display.set_mode(size)
@@ -86,11 +87,35 @@ def simulation(Client):
         frame_counter += 1
         fps_end = time()
         fps = int(frame_counter / float(fps_end - fps_start))
-        fpstext = font.Font("freesansbold.ttf", 32).render("FPS: {}".format(fps), True, (0,0,0))
+        fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
         fpstextrect = fpstext.get_rect()
         fpstextrect.top = screen.get_rect().top
         fpstextrect.right = screen.get_rect().right
         screen.blit(fpstext, fpstextrect)
+
+        Dtext = f.render("accelerate the car", True, (255,255,255))
+        Dtextrect = Dtext.get_rect()
+        Dtextrect.bottom = screen.get_rect().bottom
+        Dtextrect.right = screen.get_rect().right
+        D = image.load("assets\\keys\\D.png")
+        Drect = D.get_rect()
+        Drect.center = Dtextrect.center
+        Drect.bottom = Dtextrect.top
+        Spacetext = f.render("brake the car", True, (255,255,255))
+        Spacetextrect = Spacetext.get_rect()
+        Spacetextrect.center = Drect.center
+        Spacetextrect.bottom = Drect.top
+        Space = image.load("assets\\keys\\Space.png")
+        Spacerect = Space.get_rect()
+        Spacerect.center = Spacetextrect.center
+        Spacerect.bottom = Spacetextrect.top
+        screen.blit(Dtext,Dtextrect)
+        screen.blit(D,Drect)
+        screen.blit(Spacetext,Spacetextrect)
+        screen.blit(Space,Spacerect)
+
+
+
 
         display.flip() 
 

@@ -14,8 +14,8 @@ from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, ev
 init()                                                                      
 size = width, height = 1920, 1000                                           
 screen = display.set_mode(size)
-font = font.Font("freesansbold.ttf", 32)
-                                                          
+f = font.Font("freesansbold.ttf", 32)
+
 
 l = threading.Lock()
 
@@ -42,6 +42,8 @@ def simulation(Host):
     for c in cars:
         pt = image.load("assets\\point.png")
         ptrect = pt.get_rect()
+        pt = transform.scale(pt, (ptrect.width*4, ptrect.height))
+        ptrect = pt.get_rect() 
         ptrect.center = (c.rect.left - c.rect.width, c.rect.centery)
         rl.append(ptrect)
     fps_start = time()
@@ -108,8 +110,8 @@ def simulation(Host):
                 print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
-            elif Host.mode == 0 and check != -1:
-                c.speed = cars[check].speed
+            elif Host.mode == 0 and check != -1 and c.speed < cars[check].speed:
+                c.movement("d")
         while braking and brakingcar.speed > 0:
             brakingcar.movement(" ")
         counter += 1
@@ -117,14 +119,38 @@ def simulation(Host):
             braking = False
             counter = 0
         
+        #UI
         frame_counter += 1
         fps_end = time()
         fps = int(frame_counter / float(fps_end - fps_start))
-        fpstext = font.render("FPS: {}".format(fps), True, (0,0,0))
+        fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
         fpstextrect = fpstext.get_rect()
         fpstextrect.top = screen.get_rect().top
         fpstextrect.right = screen.get_rect().right
         screen.blit(fpstext, fpstextrect)
+
+        Btext = f.render("brake a car",True,(255,255,255))
+        Btextrect = Btext.get_rect()
+        Btextrect.bottom = screen.get_rect().bottom
+        Btextrect.right = screen.get_rect().right
+        B = image.load("assets\\keys\\B.png")
+        Brect = B.get_rect()
+        Brect.center = Btextrect.center
+        Brect.bottom = Btextrect.top
+        Utext = f.render("upload data", True, (255,255,255))
+        Utextrect = Utext.get_rect()
+        Utextrect.center = Brect.center
+        Utextrect.bottom = Brect.top
+        U = image.load("assets\\keys\\U.png")
+        Urect = U.get_rect()
+        Urect.center = Utextrect.center
+        Urect.bottom = Utextrect.top
+        screen.blit(Btext,Btextrect)
+        screen.blit(B,Brect)
+        screen.blit(Utext, Utextrect)
+        screen.blit(U, Urect)
+
+        
 
         display.flip()
 
@@ -147,7 +173,7 @@ def menu(Host):
     screen.blit(start, startrect)
     screen.blit(cacc,caccrect)
     screen.blit(manual,manualrect)
-    numClients = font.render(
+    numClients = f.render(
         "total clients: " + Host.clients.__len__().__str__(), True, (0, 0, 0))
     numClientsRect = numClients.get_rect()
     numClientsRect.top = screen.get_rect().top
