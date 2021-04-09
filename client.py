@@ -52,12 +52,10 @@ def simulation(Client):
             for i in range(cars.__len__()):
                 location = Client.locations[i].split("(")
                 if not i == Client.clientNum:
-                    print(location)
                     cars[i].speed = float(location[0])
                     cars[i].rect.center = (int(location[1].strip(")").split(
                         ",")[0]), int(location[1].strip(")").split(",")[1]))
         l.release()
-        print()
 
         screen.fill([0, 0, 0])
         # Move the car

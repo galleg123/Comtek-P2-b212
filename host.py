@@ -57,9 +57,14 @@ def simulation(Host):
                 sys.exit()
             if e.type == TEXTINPUT:
                 if e.text == "u":
-                    upload = uploadThread(data=[int(cars[1].speed), int(
+                    upload = uploadThread(data=["id", int(
                         cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
                     upload.start()
+                    uploads = []
+
+                    for i in range(cars.__len__() - Host.clients.__len__()):
+                        uploads.append(uploadThread(data=[i, "test id", c.average, c.loss, c.diff, "time"]))
+
                 if e.text == "b" and not braking:
                     print("braking")
                     rand = random.randint(1,cars.__len__()-1)
@@ -110,12 +115,16 @@ def simulation(Host):
                 print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
+                if c.num <= Host.clients.__len__():
+                    pass
+                if c.num <= Host.clients.__len__() and c.speed < 1:
+                    c.time = 0
             elif Host.mode == 0 and check != -1 and c.speed < cars[check].speed:
                 c.movement("d")
         while braking and brakingcar.speed > 0:
             brakingcar.movement(" ")
         counter += 1
-        if counter == 100:
+        if counter == 1000:
             braking = False
             counter = 0
         
@@ -184,11 +193,9 @@ def menu(Host):
             if startrect.collidepoint(mouse.get_pos()):
                 Host.simState = True
             if caccrect.collidepoint(mouse.get_pos()):
-                #TODO write a function that will change the mode to automatic mode
                 Host.mode = 0
                 pass
             if manualrect.collidepoint(mouse.get_pos()):
-                #TODO write a function that will change the mode to manual mode
                 Host.mode = 1
                 pass
         if e.type == QUIT:
