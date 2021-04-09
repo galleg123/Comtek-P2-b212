@@ -1,8 +1,11 @@
+import random
 from socket import AF_INET, SOCK_STREAM, socket
 import socketserver
 import sys
 import threading
+from time import time
 from Network.thread import uploadThread
+from Network.socketServer import socketServer
 
 from classes.car import car
 from classes.road import road
@@ -10,117 +13,42 @@ from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, ev
 
 init()                                                                      
 size = width, height = 1920, 1000                                           
-screen = display.set_mode(size)                                             
-clients = []                                                                
-simState = False                                                            
-font = font.Font("freesansbold.ttf", 32)                                    
+screen = display.set_mode(size)
+f = font.Font("freesansbold.ttf", 32)
 
-data = "placeholder"                                                        
-locations = {}                                                              
 
 l = threading.Lock()
 
-#The following class handles incoming sockets and seperates these into their own threads
-class socketServer(threading.Thread):                                       
-    def __init__(self):                                                     
-        threading.Thread.__init__(self)                                     
-        self.HOST = ""                                                      
-        self.PORT = 8888                                                    
-        self.CONN_COUNTER = 0                                               
-        self.running_sockets = []                                           
-        self.s = socket(AF_INET, SOCK_STREAM)                               
-
-#this method is run whenever the start method is called and a thread is created
-    def run(self):                                                          
-        self.s.bind((self.HOST, self.PORT))                                 
-        self.s.listen(1)                                                    
-        while not simState:                                                 
-            c, a = self.s.accept()                                          
-            self.CONN_COUNTER += 1                                          
-            client = client_connection(c, a, self.CONN_COUNTER)             
-            self.running_sockets.append(client.start())                     
-        print("Socket server finished")                                     
-
-#this method is used to stop the socket server to avoid exceptions, this method simply lets the above code continue from accept
-    def stop(self):                                                         
-        s = socket(AF_INET, SOCK_STREAM)                                    
-        s.connect(("127.0.0.1", self.PORT))                                 
-        s.send(bytes("quit", 'utf-8'))                                      
-        s.close()                                                           
-
-#this class is used whenever a client is connecting to the host, it handles the client
-class client_connection(threading.Thread):                                  
-    def __init__(self, client, addr, num):                                  
-        threading.Thread.__init__(self)                                     
-        self.BUFFER_SIZE = 1024                                             
-        self.c = client                                                     
-        self.r = ""                                                         
-        self.addr = addr                                                    
-        self.num = num                                                      
-        print(threading.Thread.getName(self) + " created.")                 
-
-#this method is run whenever the start method is used
-    def run(self):                                                          
-        global data                                                         
-        global locations                                                    
-        try:                                                                
-            while True:                                                     
-                self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")      
-                if self.addr[0] == "127.0.0.1":                             
-                    return                                                  
-                elif not self.r == "":                                      
-                    print(self.r)                                           
-                    if self.r == "join":                                    
-                        clients.append(self)                                 
-                        break                                               
-                elif self.r == "quit":                                      
-                    print("Client on " + threading.Thread.getName(self) +   
-                          " ended the connection by keyword.")
-                    return                                                  
-            started = False                                                 
-            while True:                                                     
-                if simState:                                                
-                    if not started:                                         
-                        self.c.send(
-                            bytes("start," + self.num.__str__() + "," + clients.__len__().__str__(), 'utf-8'))  
-                        print("start")                                      
-                        started = True                                      
-                    self.c.send(bytes(data, 'utf-8'))                       
-                    self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')   
-                    locations[self.num-1] = self.data                       
-
-        except:                                                             
-            print("Client on " + threading.Thread.getName(self) +
-                  " ended the connection by exception (close window).")     
-            return                                                          
-
-#method to stop the client connection, this is to avoid exceptions
-    def close(self):                                                        
-        self.c.close()                                                      
-        print("closed client connection")                                   
-
-
-def simulation():
-    global simState
-    global data
-    simState = True
+def simulation(Host):
+    braking = False
+    Host.simState = True
     numOfRoads = 0
-    numOfCars = 10
+    numOfCars = 20
+    counter = 0
 
     cars = []
     Road = road()
-    while ((Road.rect.y + Road.rect.height) <= 1000):
+    while Road.rect.y + Road.rect.height <= 1000:
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-    for i in range(clients.__len__()):
+    for i in range(Host.clients.__len__()):
         Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i)
         cars.append(Car)
-    for i in range(numOfCars):
+    for i in range(Host.clients.__len__(),numOfCars):
         cars.append(car(
             numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
-
-    while display.get_active() and clients.__len__() > 0:
+    rl = []
+    for c in cars:
+        pt = image.load("assets\\point.png")
+        ptrect = pt.get_rect()
+        pt = transform.scale(pt, (ptrect.width*4, ptrect.height))
+        ptrect = pt.get_rect() 
+        ptrect.center = (c.rect.left - c.rect.width, c.rect.centery)
+        rl.append(ptrect)
+    fps_start = time()
+    frame_counter = 0
+    while display.get_active() and Host.clients.__len__() > 0:
         numOfRoads = 0
         Road.rect.y = 0
 
@@ -129,46 +57,51 @@ def simulation():
                 sys.exit()
             if e.type == TEXTINPUT:
                 if e.text == "u":
-                    upload = uploadThread(data=[int(cars[1].speed), int(
+                    upload = uploadThread(data=["id", int(
                         cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
                     upload.start()
-            #Car.movement(e)
+                    uploads = []
 
-        data = "0:" + cars[0].speed.__str__() + cars[0].rect.center.__str__()
+                    for i in range(cars.__len__() - Host.clients.__len__()):
+                        uploads.append(uploadThread(data=[i, "test id", c.average, c.loss, c.diff, "time"]))
+
+                if e.text == "b" and not braking:
+                    print("braking")
+                    rand = random.randint(1,cars.__len__()-1)
+                    brakingcar = cars[rand]
+                    braking = True
+        Host.data = "0:{}{}".format(cars[0].speed.__str__(), cars[0].rect.center.__str__())
         for i in range(cars.__len__() - 1):
-            data += (";" + (i + 1).__str__() + ":" +
-                     cars[i + 1].speed.__str__() + cars[i + 1].rect.center.__str__())
-        print(locations)
+            Host.data += (";{}:{}{}".format((i + 1).__str__(), cars[i + 1].speed.__str__(), cars[i + 1].rect.center.__str__()))
         l.acquire()
-        for i in range(locations.__len__()):
-            if not locations.get(i) == "placeholder":
-                location = locations.get(i).split(",")
+        for i in range(Host.locations.__len__()):
+            if not Host.locations.get(i) == "placeholder":
+                location = Host.locations.get(i).split(",")
                 cars[i].speed = float(location[0])
                 cars[i].rect.center = (
                     int(location[1].strip("(")), int(location[2].strip(")")))
         l.release()
         screen.fill([0, 0, 0])
-        # Move the car
-        for c in cars:
-            try:
-                c.rect = c.rect.move(c.speed, 0)
-            except:
-                print(c.speed)
-
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
             screen.blit(Road.img, Road.rect)
             Road.rect.y += (Road.rect.height + 10)
             numOfRoads += 1
         #bounds and collision
         for c in cars:
+            try:
+                c.rect = c.rect.move(c.speed, 0)
+            except:
+                print(c.speed)
             c.outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(c.img, c.rect)
             textrect = c.text.get_rect()
             textrect.center = c.rect.center
             textrect.top = c.rect.bottom
             screen.blit(c.text, textrect)
+            rl[c.num].center = (c.rect.left - c.rect.width, c.rect.centery)
+            screen.blit(pt,rl[c.num])
             for C in cars:
-                while c.rect.colliderect(C) and not c == C and not c.num < clients.__len__():
+                while c.rect.colliderect(C) and not c == C and not c.num < Host.clients.__len__():
                     if c.rect.left <= C.rect.left:
                         c.movement(" ")
                         c.rect.x -= 5
@@ -177,42 +110,109 @@ def simulation():
                         C.movement(" ")
                         #c.rect.x += 5
                         C.rect.x -= 5
-                frontrect = c.rect
-                if c.speed < c.maxspeed and not frontrect.colliderect(C) and not c == C:
-                    #accelerate cars if there are none in front of it
-                    c.movement("d")
+            check = c.rect.collidelist(rl)
+            if Host.mode == 1 and c.speed < c.maxspeed and not check > -1:
+                print("accelerating car {}".format(c.num))
+                #accelerate cars if there are none in front of it
+                c.movement("d")
+                if c.num <= Host.clients.__len__():
+                    pass
+                if c.num <= Host.clients.__len__() and c.speed < 1:
+                    c.time = 0
+            elif Host.mode == 0 and check != -1 and c.speed < cars[check].speed:
+                c.movement("d")
+        while braking and brakingcar.speed > 0:
+            brakingcar.movement(" ")
+        counter += 1
+        if counter == 1000:
+            braking = False
+            counter = 0
+        
+        #UI
+        frame_counter += 1
+        fps_end = time()
+        fps = int(frame_counter / float(fps_end - fps_start))
+        fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
+        fpstextrect = fpstext.get_rect()
+        fpstextrect.top = screen.get_rect().top
+        fpstextrect.right = screen.get_rect().right
+        screen.blit(fpstext, fpstextrect)
+
+        Btext = f.render("brake a car",True,(255,255,255))
+        Btextrect = Btext.get_rect()
+        Btextrect.bottom = screen.get_rect().bottom
+        Btextrect.right = screen.get_rect().right
+        B = image.load("assets\\keys\\B.png")
+        Brect = B.get_rect()
+        Brect.center = Btextrect.center
+        Brect.bottom = Btextrect.top
+        Utext = f.render("upload data", True, (255,255,255))
+        Utextrect = Utext.get_rect()
+        Utextrect.center = Brect.center
+        Utextrect.bottom = Brect.top
+        U = image.load("assets\\keys\\U.png")
+        Urect = U.get_rect()
+        Urect.center = Utextrect.center
+        Urect.bottom = Utextrect.top
+        screen.blit(Btext,Btextrect)
+        screen.blit(B,Brect)
+        screen.blit(Utext, Utextrect)
+        screen.blit(U, Urect)
+
+        
+
         display.flip()
 
 
-def menu():
-    global simState
+
+def menu(Host):
     screen.fill((255, 255, 255))
-    square = image.load("assets\\start_button.png")
-    squarerect = square.get_rect()
-    squarerect.center = screen.get_rect().center
-    screen.blit(square, squarerect)
-    numClients = font.render(
-        "total clients: " + clients.__len__().__str__(), True, (0, 0, 0))
+    start = image.load("assets\\start_button.png")
+    start = transform.scale(start,(int(start.get_width()/2),int(start.get_height()/2)))
+    cacc = image.load("assets\\Cacc_simulation.png")
+    cacc = transform.scale(cacc,(int(cacc.get_width()/2),int(cacc.get_height()/2)))
+    manual = image.load("assets\\manual_simulation.png")
+    manual = transform.scale(manual,(int(manual.get_width()/2),int(manual.get_height()/2)))
+    startrect = start.get_rect()
+    caccrect = cacc.get_rect()
+    manualrect = manual.get_rect()
+    startrect.center = screen.get_rect().center
+    caccrect.center = (screen.get_rect().centerx/2,screen.get_rect().centery/2)
+    manualrect.center = (screen.get_rect().centerx + screen.get_rect().centerx/2, screen.get_rect().centery/2)
+    screen.blit(start, startrect)
+    screen.blit(cacc,caccrect)
+    screen.blit(manual,manualrect)
+    numClients = f.render(
+        "total clients: " + Host.clients.__len__().__str__(), True, (0, 0, 0))
     numClientsRect = numClients.get_rect()
     numClientsRect.top = screen.get_rect().top
     numClientsRect.centerx = screen.get_rect().centerx
     screen.blit(numClients, numClientsRect)
     for e in event.get():
-        if e.type == MOUSEBUTTONDOWN and squarerect.collidepoint(mouse.get_pos()):
-            simState = True
+        if e.type == MOUSEBUTTONDOWN:
+            if startrect.collidepoint(mouse.get_pos()):
+                Host.simState = True
+            if caccrect.collidepoint(mouse.get_pos()):
+                Host.mode = 0
+                pass
+            if manualrect.collidepoint(mouse.get_pos()):
+                Host.mode = 1
+                pass
         if e.type == QUIT:
-            simState = True
+            Host.simState = True
     display.flip()
+
+
 
 
 def main():
     s = socketServer()
     s.start()
-    while not simState:
-        menu()
+    while not s.simState:
+        menu(s)
     s.stop()
-    simulation()
-    for c in clients:
+    simulation(s)
+    for c in s.clients:
         c.close()
     print("Main thread finished.")
 
