@@ -44,7 +44,7 @@ class database(threading.Thread):
 
 
 
-    def upload_to_database(self, test_id, average, lost, reaction_time):
+    def upload_to_database(self, id, test_id, average, lost, reaction_time):
         mydb = mysql.connector.connect(
             host="62.107.59.124",
             user="remote",
@@ -54,14 +54,16 @@ class database(threading.Thread):
 
         mycursor = mydb.cursor()
 
-        mycursor.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, current_timestamp());", id, test_id, average, lost, reaction_time)
+        mycursor.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, current_timestamp());", (id, test_id, average, lost, reaction_time))
         mycursor.execute("COMMIT")
 
         return
 
-    def run(self):
+    def run(self, test_id, data):
         print("running: {}".format(threading.Thread.getName(self)))
-        self.upload_to_database(1,1,1,1)
+        self.find_max_value_id()
+        self.find_max_value_test_id()
+        self.upload_to_database(self.max+1, self.max_test_id, data[0], data[1], data[2])
 
 db = database()
 db.start()
