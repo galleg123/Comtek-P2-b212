@@ -16,6 +16,8 @@ size = width, height = 1500, 1000
 screen = display.set_mode(size)
 f = font.Font("freesansbold.ttf", 32)
 
+FPS = 60
+fpsClock = time.Clock()
 
 l = threading.Lock()
 
@@ -162,6 +164,7 @@ def simulation(Host):
         
 
         display.flip()
+        fpsClock.tick(FPS)  
 
 
 

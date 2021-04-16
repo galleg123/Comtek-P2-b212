@@ -13,6 +13,10 @@ l = threading.Lock()
 
 def simulation(Client):
     init()
+
+    FPS = 60
+    fpsClock = time.Clock()
+
     f = font.Font("freesansbold.ttf", 32)
     size = width, height = 1500, 1000
     display.set_caption("car: " + Client.clientNum.__str__())
@@ -116,6 +120,7 @@ def simulation(Client):
 
 
         display.flip() 
+        fpsClock.tick(FPS)
 
 
 def main():
