@@ -17,5 +17,5 @@ class road:
 
 
     def __init__(self):
-        self.img = transform.scale(self.img, [int(self.rect.width*1.5), int(self.rect.height*1.5)])   #Change size of road
+        self.img = transform.scale(self.img, [int(self.rect.width*1.5), int(self.rect.height)])   #Change size of road
         self.rect = self.img.get_rect()

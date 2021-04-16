@@ -23,7 +23,7 @@ class car:
     minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
     img = image.load("assets\\car new.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
-    img = transform.scale(img, [int(rect.width*1.5), int(rect.height*1.5)])     #Change the size of car
+    img = transform.scale(img, [int(rect.width), int(rect.height)])     #Change the size of car Size is equal to 4m long, and 2,4m wide
     rect = img.get_rect()
 #TODO slow down acceleration
 
