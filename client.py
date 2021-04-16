@@ -1,12 +1,12 @@
 from socket import *
 import threading
-from time import time
+#from time import time
 from Network.thread import uploadThread
 from Network.client import client
 
 from classes.car import car
 from classes.road import road
-from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font
+from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font, time
 
 #Global variables
 l = threading.Lock()
@@ -37,8 +37,8 @@ def simulation(Client):
     Car = cars[Client.clientNum]
 
     run = True
-    frame_counter = 0
-    fps_start = time()
+    #frame_counter = 0
+    #fps_start = time()
     while run and display.get_active():
         numOfRoads = 0
         Road.rect.y = 0
@@ -86,14 +86,14 @@ def simulation(Client):
                     Car.movement(" ")
                     Car.rect.right = c.rect.left
         
-        frame_counter += 1
-        fps_end = time()
-        fps = int(frame_counter / float(fps_end - fps_start))
-        fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
-        fpstextrect = fpstext.get_rect()
-        fpstextrect.top = screen.get_rect().top
-        fpstextrect.right = screen.get_rect().right
-        screen.blit(fpstext, fpstextrect)
+        #frame_counter += 1
+        #fps_end = time()
+        #fps = int(frame_counter / float(fps_end - fps_start))
+        #fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
+        #fpstextrect = fpstext.get_rect()
+        #fpstextrect.top = screen.get_rect().top
+        #fpstextrect.right = screen.get_rect().right
+        #screen.blit(fpstext, fpstextrect)
 
         Dtext = f.render("accelerate the car", True, (255,255,255))
         Dtextrect = Dtext.get_rect()

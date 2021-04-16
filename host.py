@@ -3,13 +3,13 @@ from socket import AF_INET, SOCK_STREAM, socket
 import socketserver
 import sys
 import threading
-from time import time
+# from time import time
 from Network.thread import uploadThread
 from Network.socketServer import socketServer
 
 from classes.car import car
 from classes.road import road
-from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font
+from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
 init()                                                                      
 size = width, height = 1500, 1000                                           
@@ -48,8 +48,8 @@ def simulation(Host):
         ptrect = pt.get_rect() 
         ptrect.center = (c.rect.left - c.rect.width, c.rect.centery)
         rl.append(ptrect)
-    fps_start = time()
-    frame_counter = 0
+    #fps_start = time()
+    #frame_counter = 0
     while display.get_active() and Host.clients.__len__() > 0:
         numOfRoads = 0
         Road.rect.y = 0
@@ -131,14 +131,14 @@ def simulation(Host):
             counter = 0
         
         #UI
-        frame_counter += 1
-        fps_end = time()
-        fps = int(frame_counter / float(fps_end - fps_start))
-        fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
-        fpstextrect = fpstext.get_rect()
-        fpstextrect.top = screen.get_rect().top
-        fpstextrect.right = screen.get_rect().right
-        screen.blit(fpstext, fpstextrect)
+        #frame_counter += 1
+        #fps_end = time()
+        #fps = int(frame_counter / float(fps_end - fps_start))
+        #fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
+        #fpstextrect = fpstext.get_rect()
+        #fpstextrect.top = screen.get_rect().top
+        #fpstextrect.right = screen.get_rect().right
+        #screen.blit(fpstext, fpstextrect)
 
         Btext = f.render("brake a car",True,(255,255,255))
         Btextrect = Btext.get_rect()
