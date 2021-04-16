@@ -14,7 +14,7 @@ l = threading.Lock()
 def simulation(Client):
     init()
     f = font.Font("freesansbold.ttf", 32)
-    size = width, height = 1920, 1000
+    size = width, height = 1500, 1000
     display.set_caption("car: " + Client.clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
@@ -26,10 +26,10 @@ def simulation(Client):
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
     for i in range(Client.clients):
-        cars.append(car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i))
+        cars.append(car(numOfRoads, "assets\\car new.png", screen, width, Road.rect.height, i))
     for i in range(Client.clients,numOfCars):
         cars.append(car(
-            numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
+            numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
     Car = cars[Client.clientNum]
 
     run = True

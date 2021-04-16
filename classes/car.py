@@ -21,9 +21,9 @@ class car:
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     maxspeed = 0                                                            #Max speed for the car, is set random between 2 values
     minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
-    img = image.load("assets\\car.png")                                     #Load image of player controlled car
+    img = image.load("assets\\car new.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
-    img = transform.scale(img, [int(rect.width/4), int(rect.height/4)])     #Change the size of car
+    img = transform.scale(img, [int(rect.width*1.5), int(rect.height*1.5)])     #Change the size of car
     rect = img.get_rect()
 #TODO slow down acceleration
 

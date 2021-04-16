@@ -12,7 +12,7 @@ from classes.road import road
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font
 
 init()                                                                      
-size = width, height = 1920, 1000                                           
+size = width, height = 1500, 1000                                           
 screen = display.set_mode(size)
 f = font.Font("freesansbold.ttf", 32)
 
@@ -33,11 +33,11 @@ def simulation(Host):
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
     for i in range(Host.clients.__len__()):
-        Car = car(numOfRoads, "assets\\car.png", screen, width, Road.rect.height, i)
+        Car = car(numOfRoads, "assets\\car new.png", screen, width, Road.rect.height, i)
         cars.append(Car)
     for i in range(Host.clients.__len__(),numOfCars):
         cars.append(car(
-            numOfRoads, "assets\\car2.png", screen, width, Road.rect.height, i))
+            numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
     rl = []
     for c in cars:
         pt = image.load("assets\\point.png")
