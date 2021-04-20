@@ -1,3 +1,4 @@
+from Database.database_Class import database
 import random
 from socket import AF_INET, SOCK_STREAM, socket
 import socketserver
@@ -59,13 +60,9 @@ def simulation(Host):
                 sys.exit()
             if e.type == TEXTINPUT:
                 if e.text == "u":
-                    upload = uploadThread(data=["id", int(
-                        cars[2].speed), int(cars[3].speed), int(cars[4].speed), int(cars[5].speed)])
-                    upload.start()
-                    uploads = []
-
-                    for i in range(cars.__len__() - Host.clients.__len__()):
-                        uploads.append(uploadThread(data=[i, "test id", c.average, c.loss, c.diff, "time"]))
+                    for i in range(Host.clients.__len__()):
+                        db = database()
+                        db.start(data=[cars[i].average, ])#0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
@@ -121,7 +118,7 @@ def simulation(Host):
                     pass
                 if c.num <= Host.clients.__len__() and c.speed < 1:
                     c.time = 0
-            elif Host.mode == 0 and check != -1 and c.speed < cars[check].speed:
+            elif Host.mode == 0 and check > -1 and c.speed < cars[check].speed:
                 c.movement("d")
         while braking and brakingcar.speed > 0:
             brakingcar.movement(" ")
@@ -129,6 +126,9 @@ def simulation(Host):
         if counter == 500:
             braking = False
             counter = 0
+            for c in cars:
+                c.speeds.append(c.speed)
+                c.average = sum(c.speeds) / c.speeds.__len__()
         
         #UI
         frame_counter += 1
@@ -204,6 +204,7 @@ def menu(Host):
         if e.type == QUIT:
             Host.simState = True
     display.flip()
+
 
 
 
