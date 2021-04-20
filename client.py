@@ -14,7 +14,7 @@ l = threading.Lock()
 def simulation(Client):
     init()
 
-    FPS = 60
+    FPS = 30
     fpsClock = time.Clock()
 
     f = font.Font("freesansbold.ttf", 32)

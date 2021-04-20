@@ -17,7 +17,7 @@ size = width, height = 1500, 1000
 screen = display.set_mode(size)
 f = font.Font("freesansbold.ttf", 32)
 
-FPS = 60
+FPS = 30
 fpsClock = time.Clock()
 
 l = threading.Lock()
