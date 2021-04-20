@@ -23,7 +23,7 @@ class car:
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     taskTime = 0
     accTime = 1
-    maxspeed = 40                                                            #Max speed for the car, is set random between 2 values
+    maxspeed = 20                                                            #Max speed for the car, is set random between 2 values
     minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
     img = image.load("assets\\car new.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
@@ -96,6 +96,6 @@ class car:
         self.rect = self.img.get_rect()     
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
-        self.maxspeed = random.randint(40,40)                              # Speed between 98, and  130
+        self.maxspeed = random.randint(20,20)                              # Speed between 98, and  130
         self.text = font.Font("freesansbold.ttf", 32).render("{}. car".format(num), True, (0,0,0))
         self.num = num
