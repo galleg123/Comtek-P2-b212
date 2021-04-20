@@ -18,6 +18,8 @@ import time
 
 class car:
     speed = 10                                              
+    speeds = []
+    average = 0
     acceleration = 0
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
