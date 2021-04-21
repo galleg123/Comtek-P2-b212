@@ -37,10 +37,9 @@ class client(threading.Thread):
                 return                                                      
 
         self.started = False                                                
-        while self.joined:                                                  
-            r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')               
-            if not r == "placeholderplaceholder" and not r.split(",")[0] == "start":    
-                #print(r)
+        while self.joined:
+            r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')
+            if not "placeholder" in r and not r.split(",")[0] == "start":
                 dataArray = r.split(";")                                    
                 for d in dataArray:
                     self.locations[int(d.split(":")[0])] = d.split(":")[1]       
@@ -50,7 +49,7 @@ class client(threading.Thread):
                 self.mode = int(r.split(",")[3]) #0 = CACC, 1 = Manual
                 self.started = True                                         
             if self.data.__len__() > 0:                                          
-                self.s.send(bytes(self.data, 'utf-8'))                           
+                self.s.send(bytes(self.data, 'utf-8'))
 
     #method that is called to close the connection and stop the program, used to avoid exceptions
     def stop(self):                     

@@ -20,6 +20,8 @@ class car:
     speed = 10                                              
     speeds = []
     average = 0
+    rounds = 0
+    roundb = False
     acceleration = 0
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
@@ -31,7 +33,6 @@ class car:
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width), int(rect.height)])     #Change the size of car Size is equal to 4m long, and 2,4m wide
     rect = img.get_rect()
-#TODO slow down acceleration
 
     def movement(self, txt):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
@@ -50,7 +51,7 @@ class car:
 
                     if self.speed <= self.maxspeed:
                         self.accTime += 1
-                        print(self.accTime)
+                        #print(self.accTime)
                         self.speed = 4.3 + 35.35 * math.log(self.accTime)
                         self.taskTime = int(round(time.time()*1000))
 
@@ -81,6 +82,8 @@ class car:
             else:
                 self.rect.y = 5                                                                      #If it is the last road it is on, change the y position to 5 so that is starts on the first road
                 self.rect.x = 0 - (self.rect.width/2)                                                #Still the same x position change as above
+                self.rounds += 1
+                self.roundb = True
 
         if (self.rect.x + (self.rect.width/2)) < 0:                     # This function does the same as the above function, except in the other end of the road.
             if not self.rect.y <= 5 and not self.rect.y == 100:         # 

@@ -26,8 +26,11 @@ def simulation(Host):
     braking = False
     Host.simState = True
     numOfRoads = 0
-    numOfCars = 20
+    numOfCars = 10
     counter = 0
+    avgcounter = 0
+    reactiontimer = False
+    brakingcar = 0
 
     cars = []
     Road = road()
@@ -39,8 +42,7 @@ def simulation(Host):
         Car = car(numOfRoads, "assets\\car new.png", screen, width, Road.rect.height, i)
         cars.append(Car)
     for i in range(Host.clients.__len__(),numOfCars):
-        cars.append(car(
-            numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
+        cars.append(car(numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
     rl = []
     for c in cars:
         pt = image.load("assets\\point.png")
@@ -62,11 +64,11 @@ def simulation(Host):
                 if e.text == "u":
                     for i in range(Host.clients.__len__()):
                         db = database()
-                        db.start(data=[cars[i].average, ])#0 = average, 1 = time lost, 2 = reaction time
+                        #db.start(data=[cars[i].average, ])#0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
-                    rand = random.randint(1,cars.__len__()-1)
+                    rand = random.randint(Host.clients.__len__(), cars.__len__()-1)
                     brakingcar = cars[rand]
                     braking = True
         Host.data = "0:{}{}".format(cars[0].speed.__str__(), cars[0].rect.center.__str__())
@@ -90,7 +92,7 @@ def simulation(Host):
             try:
                 c.rect = c.rect.move(c.speed, 0)
             except:
-                print(c.speed)
+                print("speed: {}".format(c.speed))
             c.outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(c.img, c.rect)
             textrect = c.text.get_rect()
@@ -110,8 +112,8 @@ def simulation(Host):
                         #c.rect.x += 5
                         C.rect.x -= 5
             check = c.rect.collidelist(rl)
-            if Host.mode == 1 and c.speed < c.maxspeed and not check > -1:
-                print("accelerating car {}".format(c.num))
+            if Host.mode == 1 and c.speed < c.maxspeed and not check > -1 and not c == brakingcar:
+                #print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
                 if c.num <= Host.clients.__len__():
@@ -120,15 +122,24 @@ def simulation(Host):
                     c.time = 0
             elif Host.mode == 0 and check > -1 and c.speed < cars[check].speed:
                 c.movement("d")
-        while braking and brakingcar.speed > 0:
+                
+        if braking:
             brakingcar.movement(" ")
-        counter += 1
-        if counter == 500:
-            braking = False
-            counter = 0
+            counter += 1
+            if counter == 150:
+                braking = False
+                brakingcar = 0
+                counter = 0
+
+        avgcounter += 1
+        if avgcounter == 500:
+            avgcounter = 0
             for c in cars:
                 c.speeds.append(c.speed)
                 c.average = sum(c.speeds) / c.speeds.__len__()
+        
+        if reactiontimer:
+            pass
         
         #UI
         frame_counter += 1

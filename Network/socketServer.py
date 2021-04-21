@@ -33,4 +33,5 @@ class socketServer(threading.Thread):
         s = socket(AF_INET, SOCK_STREAM)                                    
         s.connect(("127.0.0.1", self.PORT))                                 
         s.send(bytes("quit", 'utf-8'))                                      
+        print("stop function called")
         s.close()                                                                                     

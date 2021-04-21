@@ -1,0 +1,17 @@
+1.  round trip time: 28.893465995788574
+2.  round trip time: 28.969710588455200
+3.  round trip time: 28.971262693405150
+4.  round trip time: 28.979743242263794
+5.  round trip time: 28.975730419158936
+6.  round trip time: 28.959196805953980
+7.  round trip time: 28.961385011672974
+8.  round trip time: 28.949031352996826
+9.  round trip time: 28.966675758361816
+10. round trip time: 28.971520185470580
+
+average: 28.959772205352785
+
+
+
+11. round trip time: 64.889674663543700         //ventede i cirka 30 sekunder for at kontrollere om testen fungerede
+12. round trip time: 28.976110458374023

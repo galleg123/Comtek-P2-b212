@@ -30,12 +30,12 @@ class client_connection(threading.Thread):
             if self.handler.simState:                                                
                 if not started:                                         
                     self.c.send(
-                        bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), 'utf-8'))  
-                    print("start")                                      
+                        bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), 'utf-8'))                                      
                     started = True                                      
-                self.c.send(bytes(self.handler.data, 'utf-8'))                       
-                self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')   
-                self.handler.locations[self.num-1] = self.data                                                                             
+                if not "placeholder" in self.handler.data:
+                    self.c.send(bytes(self.handler.data, 'utf-8'))
+                    self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')   
+                    self.handler.locations[self.num-1] = self.data
 
 #method to stop the client connection, this is to avoid exceptions
     def close(self):                                                        

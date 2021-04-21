@@ -22,7 +22,7 @@ def simulation(Client):
     display.set_caption("car: " + Client.clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
-    numOfCars = 20
+    numOfCars = 10
     cars = []
     Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):
@@ -35,6 +35,13 @@ def simulation(Client):
         cars.append(car(
             numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
     Car = cars[Client.clientNum]
+
+    #for speed testing
+    cars[0].rect.x = 0
+    cars[0].rect.y = 5 + (Road.rect.height + 10) * 0
+    cars[0].speed = cars[0].maxspeed
+    cars[0].movement("d")
+    starttime = t()
 
     run = True
     frame_counter = 0
@@ -85,6 +92,12 @@ def simulation(Client):
                 elif Car.rect.x < c.rect.x:
                     Car.movement(" ")
                     Car.rect.right = c.rect.left
+
+        if cars[0].rounds > 0 and cars[0].roundb:
+            cars[0].roundb = False
+            time_end = t()
+            print("{}. round trip time: {}".format(cars[0].rounds, (time_end-starttime)))
+            starttime = t()
         
         frame_counter += 1
         fps_end = t()
