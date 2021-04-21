@@ -26,6 +26,8 @@ class database(threading.Thread):
         for i in test:
             self.max_test_id = int(i[0])
 
+        return self.max_test_id+1
+
     def find_max_value_id(self):
         mydb = mysql.connector.connect(
             host="62.107.59.124",
@@ -40,11 +42,11 @@ class database(threading.Thread):
 
         test = mycursor.fetchall()
         for i in test:
-            self.max_id = int(i[0])
+            self.max_id = int(i[0])+1
 
 # Min ide er at finde test_id inde i host for at den forbliver uændret, og så ville den kunne køre value id herinde.
 
-    def upload_to_database(self, test_id, data):
+    def upload_to_database(self, test_id, average, time_lost, reaction_time):
         mydb = mysql.connector.connect(
             host="62.107.59.124",
             user="remote",
@@ -56,16 +58,15 @@ class database(threading.Thread):
 
         mycursor = mydb.cursor()
 
-        mycursor.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, current_timestamp());", (self.max_id, test_id, data[0], data[1], data[2]))
+        mycursor.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, current_timestamp());", (self.max_id, test_id, average, time_lost, reaction_time))
         mycursor.execute("COMMIT")
 
         return
 
     def run(self, test_id, data):
         print("running: {}".format(threading.Thread.getName(self)))
-        self.find_max_value_id()
-        self.find_max_value_test_id()
-        self.upload_to_database(self.max+1, self.max_test_id, data[0], data[1], data[2])
+
+        self.upload_to_database(test_id, data[0], data[1], data[2])
 
 db = database()
 db.start()
