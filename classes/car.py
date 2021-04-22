@@ -27,7 +27,7 @@ class car:
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     taskTime = 0
     accTime = 1
-    maxspeed = 20                                                            #Max speed for the car, is set random between 2 values
+    maxspeed = 80/7.27                                                      #Max speed for the car, is set random between 2 values
     minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
     img = image.load("assets\\car new.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
@@ -49,10 +49,11 @@ class car:
                         self.accTime = 1
 
 
-                    if self.speed <= self.maxspeed:
+                    if self.speed < self.maxspeed:
                         self.accTime += 1
-                        #print(self.accTime)
-                        self.speed = 4.3 + 35.35 * math.log(self.accTime)
+                        print(self.accTime)
+                        print(self.speed)
+                        self.speed = (4.3 + 35.35 * math.log(self.accTime))/7.27
                         self.taskTime = int(round(time.time()*1000))
 
 
@@ -67,10 +68,17 @@ class car:
                         self.speed = 0
 
                     if self.speed >= 0:
-                        self.accTime -= 1
+                        if self.accTime > 5:
+                            self.accTime -= 3
+                        if self.accTime > 0.89 and self.accTime <= 5:
+                            self.accTime -= 1
+                        
+                        print(self.accTime)
+                        print(self.speed)
                         if self.accTime < 0.89:
                             self.accTime = 0.89
-                        self.speed = 4.3 + 35.35 * math.log(self.accTime)
+                            
+                        self.speed = (4.3 + 35.35 * math.log(self.accTime))/7.27
                         self.taskTime = int(round(time.time()*1000))
 
 
