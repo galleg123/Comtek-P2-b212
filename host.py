@@ -26,11 +26,13 @@ def simulation(Host):
     braking = False
     Host.simState = True
     numOfRoads = 0
-    numOfCars = 10
+    numOfCars = 30
     counter = 0
     avgcounter = 0
     reactiontimer = False
     brakingcar = 0
+    avground = 28.959772205352785
+    starttime = t()
 
     cars = []
     Road = road()
@@ -131,13 +133,22 @@ def simulation(Host):
                 brakingcar = 0
                 counter = 0
 
+        #measurements
+        #average
         avgcounter += 1
         if avgcounter == 500:
             avgcounter = 0
             for c in cars:
                 c.speeds.append(c.speed)
                 c.average = sum(c.speeds) / c.speeds.__len__()
-        
+
+        #time lost
+        if cars[0].rounds > 0 and cars[0].timelostd:
+            cars[0].timelostd = False
+            lost_time = t() - starttime - avground
+            print(lost_time)
+            starttime = t()
+
         if reactiontimer:
             pass
         

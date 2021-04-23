@@ -13,5 +13,5 @@ average: 28.959772205352785
 
 
 
-11. round trip time: 64.889674663543700         //ventede i cirka 30 sekunder for at kontrollere om testen fungerede
+11. round trip time: 64.889674663543700         //ventede i cirka 30 sekunder for at kontrollere om det stadigvæk er de samme resultater når hastigheden ændres
 12. round trip time: 28.976110458374023

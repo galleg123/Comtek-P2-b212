@@ -22,7 +22,7 @@ def simulation(Client):
     display.set_caption("car: " + Client.clientNum.__str__())
     screen = display.set_mode(size)
     numOfRoads = 0
-    numOfCars = 10
+    numOfCars = 30
     cars = []
     Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):

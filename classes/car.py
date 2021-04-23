@@ -22,6 +22,7 @@ class car:
     average = 0
     rounds = 0
     roundb = False
+    timelostd = False
     acceleration = 0
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
@@ -84,6 +85,7 @@ class car:
                 self.rect.x = 0 - (self.rect.width/2)                                                #Still the same x position change as above
                 self.rounds += 1
                 self.roundb = True
+                self.timelostd = True
 
         if (self.rect.x + (self.rect.width/2)) < 0:                     # This function does the same as the above function, except in the other end of the road.
             if not self.rect.y <= 5 and not self.rect.y == 100:         # 
