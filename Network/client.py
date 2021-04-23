@@ -51,7 +51,7 @@ class client(threading.Thread):
                 self.started = True                                         
             if self.data.__len__() > 0:                                          
                 self.s.send(bytes(self.data, 'utf-8'))
-            time.sleep(.001)
+            time.sleep(.00001)
 
     #method that is called to close the connection and stop the program, used to avoid exceptions
     def stop(self):                     

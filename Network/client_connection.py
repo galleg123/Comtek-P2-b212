@@ -39,7 +39,7 @@ class client_connection(threading.Thread):
                     self.c.send(bytes(self.handler.data, 'utf-8'))
                     self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')   
                     self.handler.locations[self.num-1] = self.data
-                    time.sleep(.001)
+                    time.sleep(.00001)
 
 #method to stop the client connection, this is to avoid exceptions
     def close(self):                                                        
