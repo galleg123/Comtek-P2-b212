@@ -1,5 +1,6 @@
 import threading
 from socket import *
+import time
 
 # seperate thread to keep the connection to the server going while the simulation is running
 class client(threading.Thread):                                             
@@ -50,6 +51,7 @@ class client(threading.Thread):
                 self.started = True                                         
             if self.data.__len__() > 0:                                          
                 self.s.send(bytes(self.data, 'utf-8'))
+            time.sleep(.001)
 
     #method that is called to close the connection and stop the program, used to avoid exceptions
     def stop(self):                     

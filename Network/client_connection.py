@@ -1,4 +1,6 @@
 import threading
+import time
+import tcp_latency
 
 
 #this class is used whenever a client is connecting to the host, it handles the client
@@ -21,8 +23,9 @@ class client_connection(threading.Thread):
                 print("Client on " + threading.Thread.getName(self) + " ended the connection by keyword.")
                 return
             elif not self.r == "":                                      
-                print(self.r)                                           
+                print("received: {}".format(self.r))                                           
                 if self.r == "join":                                    
+                    print("latency: {}".format(tcp_latency.measure_latency(host="127.0.0.1",port=8888, runs=1,timeout=2.5,wait=0)))
                     self.handler.clients.append(self)                                 
                     break                                      
         started = False                                                 
@@ -36,6 +39,7 @@ class client_connection(threading.Thread):
                     self.c.send(bytes(self.handler.data, 'utf-8'))
                     self.data = self.c.recv(self.BUFFER_SIZE).decode('utf-8')   
                     self.handler.locations[self.num-1] = self.data
+                    time.sleep(.001)
 
 #method to stop the client connection, this is to avoid exceptions
     def close(self):                                                        

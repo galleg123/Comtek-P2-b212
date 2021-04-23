@@ -67,7 +67,10 @@ class database(threading.Thread):
         print("running: {}".format(threading.Thread.getName(self)))
 
         self.upload_to_database(test_id, data[0], data[1], data[2])
+def main():
+    db = database()
+    db.start()
+    print("main executed")
 
-db = database()
-db.start()
-print("main executed")
+if __name__ == "__main__":
+    main()

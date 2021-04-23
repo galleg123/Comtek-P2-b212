@@ -12,6 +12,7 @@ from classes.car import car
 from classes.road import road
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
+
 init()                                                                      
 size = width, height = 1500, 1000                                           
 screen = display.set_mode(size)
@@ -146,7 +147,7 @@ def simulation(Host):
         if cars[0].rounds > 0 and cars[0].timelostd:
             cars[0].timelostd = False
             lost_time = t() - starttime - avground
-            print(lost_time)
+            print("time lost: {}".format(lost_time))
             starttime = t()
 
         if reactiontimer:
