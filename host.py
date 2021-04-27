@@ -6,7 +6,7 @@ import sys
 import threading
 from time import time as t
 from Network.thread import uploadThread
-from Network.socketServer import socketServer
+from Network.server import handler
 
 from classes.car import car
 from classes.road import road
@@ -23,9 +23,9 @@ fpsClock = time.Clock()
 
 l = threading.Lock()
 
-def simulation(Host):
+def simulation(Handler):
     braking = False
-    Host.simState = True
+    Handler.simState = True
     numOfRoads = 0
     numOfCars = 30
     counter = 0
@@ -41,10 +41,10 @@ def simulation(Host):
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-    for i in range(Host.clients.__len__()):
+    for i in range(Handler.clients.__len__()):
         Car = car(numOfRoads, "assets\\car new.png", screen, width, Road.rect.height, i)
         cars.append(Car)
-    for i in range(Host.clients.__len__(),numOfCars):
+    for i in range(Handler.clients.__len__(),numOfCars):
         cars.append(car(numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
     rl = []
     for c in cars:
@@ -56,7 +56,7 @@ def simulation(Host):
         rl.append(ptrect)
     fps_start = t()
     frame_counter = 0
-    while display.get_active() and Host.clients.__len__() > 0:
+    while display.get_active() and Handler.clients.__len__() > 0:
         numOfRoads = 0
         Road.rect.y = 0
 
@@ -65,22 +65,22 @@ def simulation(Host):
                 return
             if e.type == TEXTINPUT:
                 if e.text == "u":
-                    for i in range(Host.clients.__len__()):
+                    for i in range(Handler.clients.__len__()):
                         db = database()
                         #db.start(data=[cars[i].average, ])#0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
-                    rand = random.randint(Host.clients.__len__(), cars.__len__()-1)
+                    rand = random.randint(Handler.clients.__len__(), cars.__len__()-1)
                     brakingcar = cars[rand]
                     braking = True
-        Host.data = "0:{}{}".format(int(cars[0].speed).__str__(), cars[0].rect.center.__str__())
+        Handler.data = "0:{}{}".format(int(cars[0].speed).__str__(), cars[0].rect.center.__str__())
         for i in range(cars.__len__() - 1):
-            Host.data += (";{}:{}{}".format((i + 1).__str__(), int(cars[i + 1].speed).__str__(), cars[i + 1].rect.center.__str__()))
+            Handler.data += (";{}:{}{}".format((i + 1).__str__(), int(cars[i + 1].speed).__str__(), cars[i + 1].rect.center.__str__()))
         l.acquire()
-        for i in range(Host.locations.__len__()):
-            if not Host.locations.get(i) == "placeholder":
-                location = Host.locations.get(i).split(",")
+        for i in range(Handler.locations.__len__()):
+            if not Handler.locations.get(i) == "placeholder":
+                location = Handler.locations.get(i).split(",")
                 cars[i].speed = float(location[0])
                 cars[i].rect.center = (
                     int(location[1].strip("(")), int(location[2].strip(")")))
@@ -105,7 +105,7 @@ def simulation(Host):
             rl[c.num].center = (c.rect.left - c.rect.width, c.rect.centery)
             screen.blit(pt,rl[c.num])
             for C in cars:
-                while c.rect.colliderect(C) and not c == C and not c.num < Host.clients.__len__():
+                while c.rect.colliderect(C) and not c == C and not c.num < Handler.clients.__len__():
                     if c.rect.left <= C.rect.left:
                         c.movement(" ")
                         c.rect.x -= 5
@@ -115,15 +115,15 @@ def simulation(Host):
                         #c.rect.x += 5
                         C.rect.x -= 5
             check = c.rect.collidelist(rl)
-            if Host.mode == 1 and c.speed < c.maxspeed and not check > -1 and not c == brakingcar:
+            if Handler.mode == 1 and c.speed < c.maxspeed and not check > -1 and not c == brakingcar:
                 #print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
-                if c.num <= Host.clients.__len__():
+                if c.num <= Handler.clients.__len__():
                     pass
-                if c.num <= Host.clients.__len__() and c.speed < 1:
+                if c.num <= Handler.clients.__len__() and c.speed < 1:
                     c.time = 0
-            elif Host.mode == 0 and check > -1 and c.speed < cars[check].speed:
+            elif Handler.mode == 0 and check > -1 and c.speed < cars[check].speed:
                 c.movement("d")
                 
         if braking:
@@ -191,7 +191,7 @@ def simulation(Host):
 
 
 
-def menu(Host):
+def menu(Handler):
     screen.fill((255, 255, 255))
     start = image.load("assets\\start_button.png")
     start = transform.scale(start,(int(start.get_width()/2),int(start.get_height()/2)))
@@ -209,7 +209,7 @@ def menu(Host):
     screen.blit(cacc,caccrect)
     screen.blit(manual,manualrect)
     numClients = f.render(
-        "total clients: " + Host.clients.__len__().__str__(), True, (0, 0, 0))
+        "total clients: " + Handler.clients.__len__().__str__(), True, (0, 0, 0))
     numClientsRect = numClients.get_rect()
     numClientsRect.top = screen.get_rect().top
     numClientsRect.centerx = screen.get_rect().centerx
@@ -217,15 +217,15 @@ def menu(Host):
     for e in event.get():
         if e.type == MOUSEBUTTONDOWN:
             if startrect.collidepoint(mouse.get_pos()):
-                Host.simState = True
+                Handler.simState = True
             if caccrect.collidepoint(mouse.get_pos()):
-                Host.mode = 0
+                Handler.mode = 0
                 pass
             if manualrect.collidepoint(mouse.get_pos()):
-                Host.mode = 1
+                Handler.mode = 1
                 pass
         if e.type == QUIT:
-            Host.simState = True
+            Handler.simState = True
     display.flip()
 
 
@@ -233,14 +233,14 @@ def menu(Host):
 
 
 def main():
-    s = socketServer()
-    s.start()
-    while not s.simState:
-        menu(s)
-    s.stop()
-    simulation(s)
+    h = handler()
+    h.start()
+    while not h.simState:
+        menu(h)
+    h.stop()
+    simulation(h)
     print("simulation finished")
-    for c in s.clients:
+    for c in h.clients:
         print("closing client {}".format(c.getName()))
         c.close()
     print("Main thread finished.")

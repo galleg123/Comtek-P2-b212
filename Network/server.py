@@ -3,7 +3,7 @@ from socket import *
 from Network.client_connection import client_connection
 
 #The following class handles incoming sockets and seperates these into their own threads
-class socketServer(threading.Thread):                                       
+class handler(threading.Thread):                                       
     def __init__(self):                                                     
         threading.Thread.__init__(self)                                     
         self.HOST = ""                                                      
