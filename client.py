@@ -57,7 +57,7 @@ def simulation(Client):
             if e.type == TEXTINPUT:
                 txt = e.text
                 Car.movement(txt)
-        Client.data = Car.speed.__str__() + "," + Car.rect.center.__str__()
+        Client.data = int(Car.speed).__str__() + "," + Car.rect.center.__str__()
         l.acquire()
         if Client.locations.__len__() == cars.__len__():
             for i in range(cars.__len__()):

@@ -62,7 +62,7 @@ def simulation(Host):
 
         for e in event.get():
             if e.type == QUIT:
-                sys.exit()
+                return
             if e.type == TEXTINPUT:
                 if e.text == "u":
                     for i in range(Host.clients.__len__()):
@@ -74,9 +74,9 @@ def simulation(Host):
                     rand = random.randint(Host.clients.__len__(), cars.__len__()-1)
                     brakingcar = cars[rand]
                     braking = True
-        Host.data = "0:{}{}".format(cars[0].speed.__str__(), cars[0].rect.center.__str__())
+        Host.data = "0:{}{}".format(int(cars[0].speed).__str__(), cars[0].rect.center.__str__())
         for i in range(cars.__len__() - 1):
-            Host.data += (";{}:{}{}".format((i + 1).__str__(), cars[i + 1].speed.__str__(), cars[i + 1].rect.center.__str__()))
+            Host.data += (";{}:{}{}".format((i + 1).__str__(), int(cars[i + 1].speed).__str__(), cars[i + 1].rect.center.__str__()))
         l.acquire()
         for i in range(Host.locations.__len__()):
             if not Host.locations.get(i) == "placeholder":
@@ -239,7 +239,9 @@ def main():
         menu(s)
     s.stop()
     simulation(s)
+    print("simulation finished")
     for c in s.clients:
+        print("closing client {}".format(c.getName()))
         c.close()
     print("Main thread finished.")
 
