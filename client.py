@@ -7,7 +7,7 @@ from Network.client import client
 from classes.car import car
 from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font, time
-
+from keepalive import keepalive
 #Global variables
 l = threading.Lock()
 
@@ -69,16 +69,15 @@ def simulation(Client):
         l.release()
 
         screen.fill([0, 0, 0])
-        # Move the car
-        for c in cars:
-            c.rect = c.rect.move(c.speed, 0)
-
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
             screen.blit(Road.img, Road.rect)
             Road.rect.y += (Road.rect.height + 10)
             numOfRoads += 1
         #bounds and collision
         for c in cars:
+            #move the cars
+            c.rect = c.rect.move(c.speed, 0)
+
             c.outOfBounds(width, numOfRoads, Road.rect.height)
             screen.blit(c.img, c.rect)
             textrect = c.text.get_rect()
@@ -144,6 +143,8 @@ def main():
             simulation(c)
             c.stop()
             break
+    keepalive = keepalive()
+    keepalive.start()
     print("main thread finished")
 
 

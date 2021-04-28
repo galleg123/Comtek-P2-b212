@@ -24,7 +24,8 @@ class client(threading.Thread):
 
 #Method that is run when the thread is started
     def run(self):
-        self.joined = False                                                 
+        self.joined = False
+        lastdata = "placeholder"
         while True:                                                         
             In = input("write join to join a session: ")                    
             if In.__len__() > 0:                                            
@@ -39,18 +40,28 @@ class client(threading.Thread):
 
         self.started = False                                                
         while self.joined:
-            r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')
+            print("self.data: {}, lastdata: {}".format(self.data, lastdata))
+            if self.data.__len__() > 0 and self.data != lastdata:
+                self.s.send(bytes(self.data, 'utf-8'))
+                lastdata = self.data
+            try:
+                r = self.s.recv(self.BUFFER_SIZE).decode('utf-8')
+            except:
+                print("timed out")
+                continue
             if not "placeholder" in r and not r.split(",")[0] == "start":
-                dataArray = r.split(";")                                    
+                dataArray = r.split(";")
+                print(dataArray)
                 for d in dataArray:
+                    print("d: {}".format(d))
                     self.locations[int(d.split(":")[0])] = d.split(":")[1]       
             if r.split(",")[0] == "start":
                 self.clientNum = int(r.split(",")[1]) -1
                 self.clients = int(r.split(",")[2])
                 self.mode = int(r.split(",")[3]) #0 = CACC, 1 = Manual
                 self.started = True
-            if self.data.__len__() > 0:
-                self.s.send(bytes(self.data, 'utf-8'))
+                self.s.settimeout(1)
+
 
     #method that is called to close the connection and stop the program, used to avoid exceptions
     def stop(self):                     

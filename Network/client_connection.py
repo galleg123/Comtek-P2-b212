@@ -29,16 +29,23 @@ class client_connection(threading.Thread):
                     self.handler.clients.append(self)        
                     break             
         started = False                        
-        while True:   
+        while True:
+            self.c.settimeout(1)
+            lastdata = "placeholder"
             if self.handler.simState:                       
                 if not started:                
                     self.c.send(
                         bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), 'utf-8'))             
                     started = True             
-                if not "placeholder" in self.handler.data:
+                if not "placeholder" in self.handler.data and self.handler.data != lastdata:
                     self.c.send(bytes(self.handler.data, 'utf-8'))
-                    self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")
-                    self.handler.locations[self.num-1] = self.r
+                    lastdata = self.handler.data
+                    try:
+                        self.r = self.c.recv(self.BUFFER_SIZE).decode("utf-8")
+                        self.handler.locations[self.num-1] = self.r
+                    except:
+                        print("timed out")
+                        continue
 
 #method to stop the client connection, this is to avoid exceptions
     def close(self):      
