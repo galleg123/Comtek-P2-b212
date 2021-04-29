@@ -54,7 +54,7 @@ class car:
                         self.accTime += 1
                         #print(self.accTime)
                         #print(self.speed)
-                        self.speed = (4.3 + 35.35 * math.log(self.accTime))/7.27
+                        self.speed = (1.87 + 4.62 * math.log(self.accTime))
                         self.taskTime = int(round(time.time()*1000))
 
 
@@ -79,7 +79,7 @@ class car:
                         if self.accTime < 0.89:
                             self.accTime = 0.89
                             
-                        self.speed = (4.3 + 35.35 * math.log(self.accTime))/7.27
+                        self.speed = (1.87 + 4.62 * math.log(self.accTime))
                         self.taskTime = int(round(time.time()*1000))
 
 
