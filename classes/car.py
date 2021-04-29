@@ -28,7 +28,7 @@ class car:
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     taskTime = 0
     accTime = 1
-    maxspeed = 80/7.27                                                      #Max speed for the car, is set random between 2 values
+    maxspeed = 18                                                           #Max speed for the car, is set random between 2 values
     minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
     img = image.load("assets\\car new.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
@@ -37,13 +37,7 @@ class car:
 
     def movement(self, txt):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
-                #if self.speed < 1:                                          #If speed under 1, and d is pressed, change the speed to 1 so that the code below will work
-                #    self.speed = 1
-                #if self.speed < self.maxspeed:                              #If speed is under 44, and d is pressed gain speed with a given acceleration
-                #    acceleration = 0.2 
-                #    self.speed =self.speed+((self.speed**acceleration) + self.minAcceleration - 1)
-                #if self.accTime >= 1:
-                #    self.accTime = math.e**((0.02828854314*self.speed)-0.1216408355)
+            
                 if  int(round(time.time()*1000)) - self.taskTime > 1000:
 
                     if self.accTime <= 1:
@@ -52,35 +46,26 @@ class car:
 
                     if self.speed < self.maxspeed:
                         self.accTime += 1
-                        #print(self.accTime)
-                        #print(self.speed)
+                        print(self.accTime)
+                        print(self.speed)
                         self.speed = (1.87 + 4.62 * math.log(self.accTime))
                         self.taskTime = int(round(time.time()*1000))
 
 
 
             if txt == " ":                                                  #Brake function, when "space" is pressed
-                #if self.speed > 0:                                          # If the speed is over 0 change the acceleration and use it to brake
-                #    acceleration = 0.5
-                #    self.speed =self.speed-(self.speed**acceleration)
-                if  int(round(time.time()*1000)) - self.taskTime > 1000:
 
-                    if self.speed < 0:                                          # If speed goes below 0, change it back to 0 so it doesn't drive backwards
-                        self.speed = 0
+                if self.speed < 0:                                          # If speed goes below 0, change it back to 0 so it doesn't drive backwards
+                    self.speed = 0
 
-                    if self.speed >= 0:
-                        if self.accTime > 5:
-                            self.accTime -= 3
-                        if self.accTime > 0.89 and self.accTime <= 5:
-                            self.accTime -= 1
+                if self.speed >= 0:
+                    self.accTime -= 1
                         
-                        #print(self.accTime)
-                        #print(self.speed)
-                        if self.accTime < 0.89:
-                            self.accTime = 0.89
-                            
-                        self.speed = (1.87 + 4.62 * math.log(self.accTime))
-                        self.taskTime = int(round(time.time()*1000))
+                if self.accTime < 0.89:
+                    self.accTime = 0.89
+                    self.speed = 0
+                else:          
+                    self.speed = (1.87 + 4.62 * math.log(self.accTime))               
 
 
     def outOfBounds(self, screenwidth, roads, roadheight):                                          # Function that switches road if the car goes outside the screen
@@ -111,6 +96,6 @@ class car:
         self.rect = self.img.get_rect()     
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
-        self.maxspeed = random.randint(20,20)                              # Speed between 98, and  130
+        self.maxspeed = random.randint(18,18)                              # Speed between 98, and  130
         self.text = font.Font("freesansbold.ttf", 32).render("{}. car".format(num), True, (0,0,0))
         self.num = num
