@@ -1,6 +1,6 @@
 import threading
 from socket import *
-from Network.client_connection import client_connection
+from Network.client_connection import Downlink, Uplink, client_connection
 
 #The following class handles incoming sockets and seperates these into their own threads
 class handler(threading.Thread):
@@ -15,6 +15,8 @@ class handler(threading.Thread):
         self.locations = {}
         self.simState = False
         self.clients = []
+        self.newdata = False
+        self.quitting = False
         self.mode = 0 #0 = CACC mode, 1 = Manual mode
 
 #this method is run whenever the start method is called and a thread is created
@@ -23,16 +25,22 @@ class handler(threading.Thread):
         self.s.listen(1)
         while not self.simState:
             c, a = self.s.accept()
-            self.CONN_COUNTER += 1
-            client = client_connection(c, a, self.CONN_COUNTER, self)
-            self.running_sockets.append(client.start())
+            if not self.quitting:
+                self.CONN_COUNTER += 1
+                client = client_connection(c,a,self.CONN_COUNTER,self)
+                client.start()
+                #downlink = Downlink(c, a, self.CONN_COUNTER, self)
+                #self.running_sockets.append(downlink.start())
+                #uplink = Uplink(c, a, self.CONN_COUNTER, self)
+                #uplink.start()
         print("Socket server finished")
 
 #this method is used to stop the socket server to avoid exceptions, this method simply lets the above code continue from accept
     def stop(self):
+        self.quitting = True
         s = socket(AF_INET, SOCK_STREAM)
         s.connect(("127.0.0.1", self.PORT))
-        self.s.close()
         s.send(bytes("quit", 'utf-8'))
         print("stop function called")
+        self.s.close()
         s.close()

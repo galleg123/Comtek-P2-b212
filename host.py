@@ -67,7 +67,7 @@ def simulation(Handler):
                 if e.text == "u":
                     for i in range(Handler.clients.__len__()):
                         db = database()
-                        #db.start(data=[cars[i].average, ])#0 = average, 1 = time lost, 2 = reaction time
+                        #db.start(data=[cars[i].average, cars[i].lost_time, ])#0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
@@ -81,9 +81,12 @@ def simulation(Handler):
         for i in range(Handler.locations.__len__()):
             if not Handler.locations.get(i) == "placeholder":
                 location = Handler.locations.get(i).split(",")
-                cars[i].speed = float(location[0])
-                cars[i].rect.center = (
-                    int(location[1].strip("(")), int(location[2].strip(")")))
+                speed = float(location[0])
+                center = (int(location[1].strip("(")), int(location[2].strip(")")))
+                #if Handler.newdata:
+                cars[i].speed = speed
+                cars[i].rect.center = center
+                Handler.newdata = False
         l.release()
         screen.fill([0, 0, 0])
         while ((Road.rect.y + Road.rect.height) <= 1000):                       # Render the road
@@ -144,11 +147,12 @@ def simulation(Handler):
                 c.average = sum(c.speeds) / c.speeds.__len__()
 
         #time lost
-        if cars[0].rounds > 0 and cars[0].timelostd:
-            cars[0].timelostd = False
-            lost_time = t() - starttime - avground
-            print("time lost: {}".format(lost_time))
-            starttime = t()
+        for i in range(Handler.clients.__len__()):
+            if cars[i].rounds > 0 and cars[i].timelostd:
+                cars[i].timelostd = False
+                cars[i].lost_time = t() - starttime - avground
+                print("time lost: {}".format(cars[i].lost_time))
+                starttime = t()
 
         if reactiontimer:
             pass

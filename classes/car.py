@@ -22,6 +22,7 @@ class car:
     average = 0
     rounds = 0
     roundb = False
+    lost_time = 0
     timelostd = False
     acceleration = 0
     deceleration = 1.0

@@ -2,7 +2,7 @@ from socket import *
 import threading
 from time import time as t
 from Network.thread import uploadThread
-from Network.client import client
+from Network.client import Downlink, Uplink, client
 
 from classes.car import car
 from classes.road import road
@@ -63,9 +63,13 @@ def simulation(Client):
             for i in range(cars.__len__()):
                 location = Client.locations[i].split("(")
                 if not i == Client.clientNum:
-                    cars[i].speed = float(location[0])
-                    cars[i].rect.center = (int(location[1].strip(")").split(
-                        ",")[0]), int(location[1].strip(")").split(",")[1]))
+                    speed = float(location[0])
+                    center = (int(location[1].strip(")").split(",")[0]), int(location[1].strip(")").split(",")[1]))
+
+                    #if Client.newdata:
+                    cars[i].speed = speed
+                    cars[i].rect.center = center
+                    Client.newdata = False
         l.release()
 
         screen.fill([0, 0, 0])
@@ -138,11 +142,31 @@ def simulation(Client):
 def main():
     c = client()
     c.start()
+
+    #new stuff
+    #joined = False
+    #while not joined:
+        #In = input("write join to join a session: ")
+        #if In == "join":
+            #s = socket(AF_INET,SOCK_STREAM)
+            #s.connect(("127.0.0.1", 8888))
+            #s.send(bytes(In, "utf-8"))
+            #joined = True
+            #Dlink = Downlink(s)
+            #Ulink = Uplink(s)
+        
     while True:
         if c.joined and c.started:
             simulation(c)
             c.stop()
             break
+    #new stuff
+    #while True:
+        #if joined and Dlink.started:
+            #simulation(Dlink, Ulink)
+            #Dlink.stop()
+            #Ulink.stop()
+            #break
     keepalive = keepalive()
     keepalive.start()
     print("main thread finished")
