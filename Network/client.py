@@ -78,14 +78,18 @@ class Downlink(threading.Thread):
         self.data = "placeholder"
         self.locations = []
         self.bufferSize = 1024
+        self.started = False
 
     def run(self):
-        started = False
         while True:
             r = self.socket.recv(self.bufferSize).decode("utf-8")
-            if not started and "start" in r:
-                started = True
-            elif started:
+            if not self.started and "start" in r:
+                self.clientNum = int(r.split(",")[1]) -1
+                self.clients = int(r.split(",")[2])
+                self.mode = int(r.split(",")[3]) #0 = CACC, 1 = Manual
+                self.socket.settimeout(1)
+                self.started = True
+            elif self.started:
                 if not "placeholder" in r:
                     pass
         

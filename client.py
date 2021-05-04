@@ -140,33 +140,36 @@ def simulation(Client):
 
 
 def main():
-    c = client()
-    c.start()
+    #old stuff
+    #c = client()
+    #c.start()
 
     #new stuff
-    #joined = False
-    #while not joined:
-        #In = input("write join to join a session: ")
-        #if In == "join":
-            #s = socket(AF_INET,SOCK_STREAM)
-            #s.connect(("127.0.0.1", 8888))
-            #s.send(bytes(In, "utf-8"))
-            #joined = True
-            #Dlink = Downlink(s)
-            #Ulink = Uplink(s)
+    joined = False
+    while not joined:
+        In = input("write join to join a session: ")
+        if In == "join":
+            s = socket(AF_INET,SOCK_STREAM)
+            s.connect(("127.0.0.1", 8888))
+            s.send(bytes(In, "utf-8"))
+            joined = True
+            Dlink = Downlink(s)
+            Ulink = Uplink(s)
         
-    while True:
-        if c.joined and c.started:
-            simulation(c)
-            c.stop()
-            break
-    #new stuff
+    #old stuff
     #while True:
-        #if joined and Dlink.started:
-            #simulation(Dlink, Ulink)
-            #Dlink.stop()
-            #Ulink.stop()
+        #if c.joined and c.started:
+            #simulation(c)
+            #c.stop()
             #break
+
+    #new stuff
+    while True:
+        if joined and Dlink.started:
+            simulation(Dlink, Ulink)
+            Dlink.stop()
+            Ulink.stop()
+            break
     keepalive = keepalive()
     keepalive.start()
     print("main thread finished")
