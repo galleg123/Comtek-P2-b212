@@ -23,7 +23,7 @@ fpsClock = time.Clock()
 
 l = threading.Lock()
 
-def simulation(Handler):
+def simulation(Handler: handler):
     braking = False
     Handler.simState = True
     numOfRoads = 0
@@ -195,7 +195,7 @@ def simulation(Handler):
 
 
 
-def menu(Handler):
+def menu(Handler: handler):
     screen.fill((255, 255, 255))
     start = image.load("assets\\start_button.png")
     start = transform.scale(start,(int(start.get_width()/2),int(start.get_height()/2)))

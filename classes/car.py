@@ -2,6 +2,7 @@ import pygame
 import random
 import sys
 from pygame import (
+    Surface,
     image,
     display,
     init,
@@ -16,7 +17,7 @@ import math
 import time
 
 
-class car:
+class car():
     speed = 10                                              
     speeds = []
     average = 0
@@ -36,7 +37,7 @@ class car:
     img = transform.scale(img, [int(rect.width), int(rect.height)])     #Change the size of car Size is equal to 4m long, and 2,4m wide
     rect = img.get_rect()
 
-    def movement(self, txt):                                                  #Define movement for player controlled car
+    def movement(self, txt: str):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
             
                 if  int(round(time.time()*1000)) - self.taskTime > 1000:
@@ -69,7 +70,7 @@ class car:
                     self.speed = (1.87 + 4.62 * math.log(self.accTime))               
 
 
-    def outOfBounds(self, screenwidth, roads, roadheight):                                          # Function that switches road if the car goes outside the screen
+    def outOfBounds(self, screenwidth: int, roads: int, roadheight: int):                                          # Function that switches road if the car goes outside the screen
         if (self.rect.x + (self.rect.width/2)) > screenwidth:
             if not self.rect.y == (((roadheight) + 10) * (roads-1)) + 5 and not self.rect.y >= (((roadheight) + 10) * (roads-1)) + 100:             #Check what y position the car has to know which road it is on
                 self.rect.y += (roadheight + 10)                                                     #If the road it is on, isn't the last road, then move down one road
@@ -89,7 +90,7 @@ class car:
                 self.rect.y += (roadheight) * (roads)                   #
                 self.rect.x = 1920 - (self.rect.width/2)                # down to here is the same as the above, except for the other end of the road
 
-    def __init__(self, roads, Image, screen, width, roadheight, num):        # Create an init that can be used to create more cars, as used for creating ai cars and player controlled cars
+    def __init__(self, roads: int, Image: str, screen: Surface, width: int, roadheight: int, num: int):        # Create an init that can be used to create more cars, as used for creating ai cars and player controlled cars
         screen.blit(self.img, self.rect)                                # Load in the car
         self.img = image.load(Image)                                    # Give the car an image
         self.img = transform.scale(

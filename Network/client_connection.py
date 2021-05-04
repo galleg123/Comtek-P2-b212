@@ -1,11 +1,14 @@
+from socket import socket
 import threading
 import time
 import tcp_latency
 
+from Network.server import handler
+
 lock = threading.Lock()
 #this class is used whenever a client is connecting to the host, it handles the client
 class client_connection(threading.Thread):         
-    def __init__(self, client, addr, num, handler):         
+    def __init__(self, client: socket, addr: str, num: int, handler: handler):         
         threading.Thread.__init__(self)
         self.BUFFER_SIZE = 1024                    
         self.c = client   
@@ -62,7 +65,7 @@ class client_connection(threading.Thread):
 class Downlink(threading.Thread):
     bufferSize = 1024
 
-    def __init__(self, socket, addr, num, handler):
+    def __init__(self, socket: socket, addr: str, num: int, handler: handler):
         threading.Thread.__init__(self)
         self.socket = socket
         self.addr = addr
@@ -87,9 +90,7 @@ class Downlink(threading.Thread):
         while True:
             if self.handler.simState:
                 try:
-                    lock.acquire()
                     r = self.socket.recv(self.bufferSize).decode("utf-8")
-                    lock.release()
                     print("received data: {}".format(r))
                     self.handler.locations[self.num-1] = r
                     self.handler.newdata = True
@@ -108,7 +109,7 @@ class Downlink(threading.Thread):
 
 #this class will handle all sent data to the clients
 class Uplink(threading.Thread):
-    def __init__(self, socket, addr, num, handler):
+    def __init__(self, socket: socket, addr: str, num: int, handler: handler):
         threading.Thread.__init__(self)
         self.socket = socket
         self.addr = addr
@@ -125,7 +126,9 @@ class Uplink(threading.Thread):
                     started = True
                 elif not "placeholder" in self.handler.data and self.handler.data != lastdata:
                     print("sending data")
+                    lock.acquire()
                     self.socket.send(bytes(self.handler.data, 'utf-8'))
+                    lock.release()
                     lastdata = self.handler.data
                 if "quit" in self.handler.data:
                     print("quitting uplink")

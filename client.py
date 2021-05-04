@@ -11,7 +11,7 @@ from keepalive import keepalive
 #Global variables
 l = threading.Lock()
 
-def simulation(Client):
+def simulation(Client: client):
     init()
 
     FPS = 30
@@ -135,7 +135,7 @@ def simulation(Client):
 
 
 
-        display.flip() 
+        display.flip()
         fpsClock.tick(FPS)
 
 

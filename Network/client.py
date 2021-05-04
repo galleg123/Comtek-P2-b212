@@ -70,7 +70,7 @@ class client(threading.Thread):
         self.joined = False
 
 class Downlink(threading.Thread):
-    def __init__(self, socket):
+    def __init__(self, socket: socket):
         threading.Thread.__init__(self)
         self.joined = False
         self.socket = socket
@@ -95,7 +95,7 @@ class Downlink(threading.Thread):
         
 
 class Uplink(threading.Thread):
-    def __init__(self,socket):
+    def __init__(self,socket: socket):
         threading.Thread.__init__(self)
         self.socket = socket
     def run(self):
