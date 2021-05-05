@@ -27,12 +27,14 @@ class handler(threading.Thread):
             c, a = self.s.accept()
             if not self.quitting:
                 self.CONN_COUNTER += 1
-                client = client_connection(c,a,self.CONN_COUNTER,self)
-                client.start()
-                #downlink = Downlink(c, a, self.CONN_COUNTER, self)
-                #self.running_sockets.append(downlink.start())
-                #uplink = Uplink(c, a, self.CONN_COUNTER, self)
-                #uplink.start()
+                #client = client_connection(c,a,self.CONN_COUNTER,self)
+                #client.start()
+                downlink = Downlink(c, a, self.CONN_COUNTER, self)
+                self.running_sockets.append(downlink.start())
+                uplink = Uplink(c, a, self.CONN_COUNTER, self)
+                uplink.start()
+            else:
+                break
         print("Socket server finished")
 
 #this method is used to stop the socket server to avoid exceptions, this method simply lets the above code continue from accept

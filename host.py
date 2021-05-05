@@ -208,8 +208,7 @@ def menu(Handler: handler):
     screen.blit(start, startrect)
     screen.blit(cacc,caccrect)
     screen.blit(manual,manualrect)
-    numClients = f.render(
-        "total clients: " + Handler.clients.__len__().__str__(), True, (0, 0, 0))
+    numClients = f.render("total clients: " + Handler.clients.__len__().__str__(), True, (0, 0, 0))
     numClientsRect = numClients.get_rect()
     numClientsRect.top = screen.get_rect().top
     numClientsRect.centerx = screen.get_rect().centerx

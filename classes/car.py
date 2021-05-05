@@ -49,8 +49,6 @@ class car():
 
                     if self.speed < self.maxspeed:
                         self.accTime += 1
-                        print(self.accTime)
-                        print(self.speed)
                         self.speed = (1.87 + 4.62 * math.log(self.accTime)) * self.accMultiplier
                         self.taskTime = int(round(time.time()*1000))
 

@@ -78,7 +78,7 @@ class Downlink(threading.Thread):
                 lock.release()
             except:
                 lock.release()
-                print("timed out")
+                #print("timed out")
 
             if r == "quit":
                 print("Client on " + threading.Thread.getName(self) + " ended the connection by keyword.")
@@ -94,11 +94,10 @@ class Downlink(threading.Thread):
             if self.handler.simState:
                 try:
                     r = self.socket.recv(self.bufferSize).decode("utf-8")
-                    print("received data: {}".format(r))
                     self.handler.locations[self.num-1] = r
                     self.handler.newdata = True
                 except:
-                    print("timed out")
+                    #print("timed out")
                     continue
     def close(self):
         self.socket.close()
@@ -129,9 +128,7 @@ class Uplink(threading.Thread):
                     started = True
                 elif not "placeholder" in self.handler.data and self.handler.data != lastdata:
                     print("sending data")
-                    lock.acquire()
                     self.socket.send(bytes(self.handler.data, 'utf-8'))
-                    lock.release()
                     lastdata = self.handler.data
                 if "quit" in self.handler.data:
                     print("quitting uplink")
