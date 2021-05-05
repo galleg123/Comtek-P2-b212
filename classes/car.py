@@ -47,7 +47,7 @@ class car():
                         self.accTime = 1
 
 
-                    if self.speed < self.maxspeed:
+                    if self.speed < self.maxspeed/7.2:
                         self.accTime += 1
                         self.speed = (1.87 + 4.62 * math.log(self.accTime)) * self.accMultiplier
                         self.taskTime = int(round(time.time()*1000))
@@ -97,7 +97,7 @@ class car():
         self.rect = self.img.get_rect()     
         self.rect.x = random.randint(0, width)                          # Spawn the car at a random x position 
         self.rect.y = 5 + (roadheight + 10) * random.randint(0, roads - 1)  # Spawn the car at a random road
-        self.maxspeed = random.randint(18,18)                              # Speed between 98, and  130
+        self.maxspeed = random.randint(110, 130)                              # Speed between 98, and  130
         self.text = font.Font("freesansbold.ttf", 32).render("{}. car".format(num), True, (0,0,0))
         self.num = num
         self.accMultiplier = random.randint(5,11) / 10
