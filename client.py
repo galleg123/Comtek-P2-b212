@@ -1,17 +1,15 @@
 from socket import *
 import threading
 from time import time as t
-from Network.thread import uploadThread
 from Network.client import Downlink, Uplink, client
 
 from classes.car import car
 from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font, time
-from keepalive import keepalive
 #Global variables
 l = threading.Lock()
 
-def simulation(Client: client):
+def simulation(DownLink: Downlink, UpLink: Uplink):
     init()
 
     FPS = 30
@@ -19,22 +17,22 @@ def simulation(Client: client):
 
     f = font.Font("freesansbold.ttf", 32)
     size = width, height = 1500, 1000
-    display.set_caption("car: " + Client.clientNum.__str__())
+    display.set_caption("car: " + str(DownLink.clientNum))
     screen = display.set_mode(size)
     numOfRoads = 0
-    numOfCars = 30
+    numOfCars = 5
     cars = []
     Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):
         screen.blit(Road.img, Road.rect)
         Road.rect.y += (Road.rect.height + 10)
         numOfRoads += 1
-    for i in range(Client.clients):
+    for i in range(DownLink.clients):
         cars.append(car(numOfRoads, "assets\\car new.png", screen, width, Road.rect.height, i))
-    for i in range(Client.clients,numOfCars):
+    for i in range(DownLink.clients,numOfCars):
         cars.append(car(
             numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
-    Car = cars[Client.clientNum]
+    Car = cars[DownLink.clientNum]
 
     #for speed testing
     cars[0].rect.x = 0
@@ -57,19 +55,19 @@ def simulation(Client: client):
             if e.type == TEXTINPUT:
                 txt = e.text
                 Car.movement(txt)
-        Client.data = int(Car.speed).__str__() + "," + Car.rect.center.__str__()
+        UpLink.data = str(int(Car.speed)) + "," + str(Car.rect.center)
         l.acquire()
-        if Client.locations.__len__() == cars.__len__():
-            for i in range(cars.__len__()):
-                location = Client.locations[i].split("(")
-                if not i == Client.clientNum:
+        if len(DownLink.locations) == len(cars):
+            for i in range(len(cars)):
+                location = DownLink.locations[i].split("(")
+                if not i == DownLink.clientNum:
                     speed = float(location[0])
                     center = (int(location[1].strip(")").split(",")[0]), int(location[1].strip(")").split(",")[1]))
 
                     #if Client.newdata:
                     cars[i].speed = speed
                     cars[i].rect.center = center
-                    Client.newdata = False
+                    DownLink.newdata = False
         l.release()
 
         screen.fill([0, 0, 0])
@@ -152,9 +150,12 @@ def main():
             s = socket(AF_INET,SOCK_STREAM)
             s.connect(("127.0.0.1", 8888))
             s.send(bytes(In, "utf-8"))
+            print("joined")
             joined = True
             Dlink = Downlink(s)
             Ulink = Uplink(s)
+            Dlink.start()
+            Ulink.start()
         
     #old stuff
     #while True:
@@ -170,8 +171,6 @@ def main():
             Dlink.stop()
             Ulink.stop()
             break
-    keepalive = keepalive()
-    keepalive.start()
     print("main thread finished")
 
 

@@ -1,15 +1,11 @@
-from Database.database_Class import database
-import random
-from socket import AF_INET, SOCK_STREAM, socket
-import socketserver
-import sys
-import threading
-from time import time as t
-from Network.thread import uploadThread
 from Network.server import handler
-
+from Database.database_Class import database
 from classes.car import car
 from classes.road import road
+import random
+import threading
+from time import time as t
+
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
 
@@ -27,7 +23,7 @@ def simulation(Handler: handler):
     braking = False
     Handler.simState = True
     numOfRoads = 0
-    numOfCars = 30
+    numOfCars = 5
     counter = 0
     avgcounter = 0
     reactiontimer = False
@@ -56,7 +52,7 @@ def simulation(Handler: handler):
         rl.append(ptrect)
     fps_start = t()
     frame_counter = 0
-    while display.get_active() and Handler.clients.__len__() > 0:
+    while display.get_active() and len(Handler.clients) > 0:
         numOfRoads = 0
         Road.rect.y = 0
 
@@ -65,20 +61,20 @@ def simulation(Handler: handler):
                 return
             if e.type == TEXTINPUT:
                 if e.text == "u":
-                    for i in range(Handler.clients.__len__()):
+                    for i in range(len(Handler.clients)):
                         db = database()
                         #db.start(data=[cars[i].average, cars[i].lost_time, ])#0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
-                    rand = random.randint(Handler.clients.__len__(), cars.__len__()-1)
+                    rand = random.randint(len(Handler.clients), len(cars) - 1)
                     brakingcar = cars[rand]
                     braking = True
-        Handler.data = "0:{}{}".format(int(cars[0].speed).__str__(), cars[0].rect.center.__str__())
-        for i in range(cars.__len__() - 1):
-            Handler.data += (";{}:{}{}".format((i + 1).__str__(), int(cars[i + 1].speed).__str__(), cars[i + 1].rect.center.__str__()))
+        Handler.data = "0:{}{}".format(str(int(cars[0].speed)), str(cars[0].rect.center))
+        for i in range(len(cars) - 1):
+            Handler.data += (";{}:{}{}".format((i + 1), int(cars[i + 1].speed), cars[i + 1].rect.center))
         l.acquire()
-        for i in range(Handler.locations.__len__()):
+        for i in range(len(Handler.locations)):
             if not Handler.locations.get(i) == "placeholder":
                 location = Handler.locations.get(i).split(",")
                 speed = float(location[0])
@@ -108,7 +104,7 @@ def simulation(Handler: handler):
             rl[c.num].center = (c.rect.left - c.rect.width, c.rect.centery)
             screen.blit(pt,rl[c.num])
             for C in cars:
-                while c.rect.colliderect(C) and not c == C and not c.num < Handler.clients.__len__():
+                while c.rect.colliderect(C) and not c == C and not c.num < len(Handler.clients):
                     if c.rect.left <= C.rect.left:
                         c.movement(" ")
                         c.rect.x -= 5
@@ -122,9 +118,9 @@ def simulation(Handler: handler):
                 #print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
-                if c.num <= Handler.clients.__len__():
+                if c.num <= len(Handler.clients):
                     pass
-                if c.num <= Handler.clients.__len__() and c.speed < 1:
+                if c.num <= len(Handler.clients) and c.speed < 1:
                     c.time = 0
             elif Handler.mode == 0 and check > -1 and c.speed < cars[check].speed:
                 c.movement("d")
@@ -144,10 +140,10 @@ def simulation(Handler: handler):
             avgcounter = 0
             for c in cars:
                 c.speeds.append(c.speed)
-                c.average = sum(c.speeds) / c.speeds.__len__()
+                c.average = sum(c.speeds) / len(c.speeds)
 
         #time lost
-        for i in range(Handler.clients.__len__()):
+        for i in range(len(Handler.clients)):
             if cars[i].rounds > 0 and cars[i].timelostd:
                 cars[i].timelostd = False
                 cars[i].lost_time = t() - starttime - avground

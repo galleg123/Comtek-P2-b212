@@ -1,6 +1,6 @@
 import threading
 from socket import *
-from Network.client_connection import Downlink, Uplink, client_connection
+from Network.client_connection import *
 
 #The following class handles incoming sockets and seperates these into their own threads
 class handler(threading.Thread):

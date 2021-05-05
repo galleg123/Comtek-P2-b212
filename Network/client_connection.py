@@ -3,20 +3,18 @@ import threading
 import time
 import tcp_latency
 
-from Network.server import handler
-
 lock = threading.Lock()
 #this class is used whenever a client is connecting to the host, it handles the client
 class client_connection(threading.Thread):         
-    def __init__(self, client: socket, addr: str, num: int, handler: handler):         
+    def __init__(self, client: socket, addr: str, num: int, handler):
         threading.Thread.__init__(self)
-        self.BUFFER_SIZE = 1024                    
+        self.BUFFER_SIZE = 1024
         self.c = client   
         self.r = ""       
         self.addr = addr  
         self.num = num    
         self.handler = handler
-        print(threading.Thread.getName(self) + " created.")                 
+        print(threading.Thread.getName(self) + " created.")
 
 #this method is run whenever the start method is used
     def run(self):          
@@ -65,7 +63,7 @@ class client_connection(threading.Thread):
 class Downlink(threading.Thread):
     bufferSize = 1024
 
-    def __init__(self, socket: socket, addr: str, num: int, handler: handler):
+    def __init__(self, socket: socket, addr: str, num: int, handler):
         threading.Thread.__init__(self)
         self.socket = socket
         self.addr = addr
@@ -74,9 +72,14 @@ class Downlink(threading.Thread):
     def run(self):
         joined = False
         while not joined:
-            lock.acquire()
-            r = self.socket.recv(self.bufferSize).decode("utf-8")
-            lock.release()
+            try:
+                lock.acquire()
+                r = self.socket.recv(self.bufferSize).decode("utf-8")
+                lock.release()
+            except:
+                lock.release()
+                print("timed out")
+
             if r == "quit":
                 print("Client on " + threading.Thread.getName(self) + " ended the connection by keyword.")
                 return
@@ -86,7 +89,7 @@ class Downlink(threading.Thread):
                     print("latency: {}".format(tcp_latency.measure_latency(host="127.0.0.1",port=8888, runs=1,timeout=2.5,wait=0)))
                     self.handler.clients.append(self)
                     joined = True
-        self.socket.settimeout(1)
+                    break
         while True:
             if self.handler.simState:
                 try:
@@ -109,7 +112,7 @@ class Downlink(threading.Thread):
 
 #this class will handle all sent data to the clients
 class Uplink(threading.Thread):
-    def __init__(self, socket: socket, addr: str, num: int, handler: handler):
+    def __init__(self, socket: socket, addr: str, num: int, handler):
         threading.Thread.__init__(self)
         self.socket = socket
         self.addr = addr
