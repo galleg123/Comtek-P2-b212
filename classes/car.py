@@ -30,11 +30,12 @@ class car():
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength
     taskTime = 0
     accTime = 1
-    maxspeed = 18                                                           #Max speed for the car, is set random between 2 values
+    accMultiplier = 0
+    maxspeed = 0                                                            #Max speed for the car, is set random between 2 values
     minAcceleration = 0.1                                                   #Minimum speed increase when accelerating
     img = image.load("assets\\car new.png")                                     #Load image of player controlled car
     rect = img.get_rect()                                                   #Define rect as the size of car image
-    img = transform.scale(img, [int(rect.width), int(rect.height)])     #Change the size of car Size is equal to 4m long, and 2,4m wide
+    img = transform.scale(img, [int(rect.width), int(rect.height)])         #Change the size of car Size is equal to 4m long, and 2,4m wide
     rect = img.get_rect()
 
     def movement(self, txt: str):                                                  #Define movement for player controlled car
@@ -50,7 +51,7 @@ class car():
                         self.accTime += 1
                         print(self.accTime)
                         print(self.speed)
-                        self.speed = (1.87 + 4.62 * math.log(self.accTime))
+                        self.speed = (1.87 + 4.62 * math.log(self.accTime)) * self.accMultiplier
                         self.taskTime = int(round(time.time()*1000))
 
 
@@ -101,3 +102,4 @@ class car():
         self.maxspeed = random.randint(18,18)                              # Speed between 98, and  130
         self.text = font.Font("freesansbold.ttf", 32).render("{}. car".format(num), True, (0,0,0))
         self.num = num
+        self.accMultiplier = random.randint(5,11) / 10
