@@ -69,6 +69,7 @@ class Downlink(threading.Thread):
         self.addr = addr
         self.num = num
         self.handler = handler
+        print(threading.Thread.getName(self) + " downlink created.")
     def run(self):
         joined = False
         while not joined:
@@ -86,7 +87,7 @@ class Downlink(threading.Thread):
             elif r != "":
                 print("received: {}".format(r))
                 if r == "join":
-                    print("latency: {}".format(tcp_latency.measure_latency(host="127.0.0.1",port=8888, runs=1,timeout=2.5,wait=0)))
+                    print("latency: {}".format(tcp_latency.measure_latency(host=self.addr[0],port=8888, runs=1,timeout=2.5,wait=0)))
                     self.handler.clients.append(self)
                     joined = True
                     break
@@ -117,6 +118,7 @@ class Uplink(threading.Thread):
         self.addr = addr
         self.handler = handler
         self.num = num
+        print(threading.Thread.getName(self) + " uplink created.")
     def run(self):
         started = False
         running = True
@@ -127,7 +129,6 @@ class Uplink(threading.Thread):
                     self.socket.send(bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), "utf-8"))
                     started = True
                 elif not "placeholder" in self.handler.data and self.handler.data != lastdata:
-                    print("sending data")
                     self.socket.send(bytes(self.handler.data, 'utf-8'))
                     lastdata = self.handler.data
                 if "quit" in self.handler.data:

@@ -85,7 +85,7 @@ class Downlink(threading.Thread):
         while True:
             try:
                 r = self.socket.recv(self.bufferSize).decode("utf-8")
-                print(r)
+                #print(r)
             except:
                 print("timed out")
                 continue

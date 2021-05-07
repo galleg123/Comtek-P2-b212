@@ -103,11 +103,16 @@ def simulation(DownLink: Downlink, UpLink: Uplink):
         frame_counter += 1
         fps_end = t()
         fps = int(frame_counter / float(fps_end - fps_start))
-        fpstext = f.render("FPS: {}".format(fps), True, (0,0,0))
+        fpstext = f.render("FPS: {}".format(fps), True, (255,255,255))
         fpstextrect = fpstext.get_rect()
         fpstextrect.top = screen.get_rect().top
         fpstextrect.right = screen.get_rect().right
+        speedtext = f.render("Speed: {}".format(cars[DownLink.clientNum].speed), True, (255,255,255))
+        speedtextrect = speedtext.get_rect()
+        speedtextrect.top = fpstextrect.bottom
+        speedtextrect.right = screen.get_rect().right
         screen.blit(fpstext, fpstextrect)
+        screen.blit(speedtext, speedtextrect)
 
         Dtext = f.render("accelerate the car", True, (255,255,255))
         Dtextrect = Dtext.get_rect()
