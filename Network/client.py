@@ -101,6 +101,7 @@ class Downlink(threading.Thread):
                         try:
                             self.locations[int(data.split(":")[0])] = data.split(":")[1]
                         except:
+                            print(data)
                             continue
                     
         
