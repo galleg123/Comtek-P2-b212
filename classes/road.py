@@ -10,7 +10,7 @@ from pygame import (
 from classes import car
 
 
-class road:
+class road():
     img = image.load("assets\\road new.png")                    #Load image of road
     rect = img.get_rect()                                   #Define rect as the size of road image
 

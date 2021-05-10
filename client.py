@@ -146,9 +146,6 @@ def simulation(DownLink: Downlink, UpLink: Uplink):
 
 
 def main():
-    #old stuff
-    #c = client()
-    #c.start()
 
     #new stuff
     joined = False
@@ -164,13 +161,6 @@ def main():
             Ulink = Uplink(s)
             Dlink.start()
             Ulink.start()
-        
-    #old stuff
-    #while True:
-        #if c.joined and c.started:
-            #simulation(c)
-            #c.stop()
-            #break
 
     #new stuff
     while True:
