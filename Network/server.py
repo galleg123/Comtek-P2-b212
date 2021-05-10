@@ -25,7 +25,7 @@ class handler(threading.Thread):
         self.s.listen(1)
         while not self.simState:
             c, a = self.s.accept()
-            if not self.quitting:
+            if not self.quitting and "join" in c.recv(1024).decode("utf-8"):
                 self.CONN_COUNTER += 1
                 #client = client_connection(c,a,self.CONN_COUNTER,self)
                 #client.start()
@@ -34,7 +34,7 @@ class handler(threading.Thread):
                 uplink = Uplink(c, a, self.CONN_COUNTER, self)
                 uplink.start()
             else:
-                break
+                c.close()
         print("Socket server finished")
 
 #this method is used to stop the socket server to avoid exceptions, this method simply lets the above code continue from accept

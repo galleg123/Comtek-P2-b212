@@ -1,13 +1,16 @@
 from socket import *
 import threading
 from time import time as t
-from Network.client import Downlink, Uplink, client
+from Network.client import Downlink, Uplink
 
 from classes.car import car
 from classes.road import road
 from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font, time
 #Global variables
 l = threading.Lock()
+
+serverIP = "127.0.0.1"
+serverPort = 8888
 
 def simulation(DownLink: Downlink, UpLink: Uplink):
     init()
@@ -153,7 +156,7 @@ def main():
         In = input("write join to join a session: ")
         if In == "join":
             s = socket(AF_INET,SOCK_STREAM)
-            s.connect(("127.0.0.1", 8888))
+            s.connect((serverIP, serverPort))
             s.send(bytes(In, "utf-8"))
             print("joined")
             joined = True

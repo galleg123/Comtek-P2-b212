@@ -6,7 +6,7 @@ import random
 import threading
 from time import time as t
 
-from pygame import KEYDOWN, MOUSEBUTTONDOWN, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
+from pygame import KEYDOWN, MOUSEBUTTONDOWN, Rect, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
 
 init()                                                                      
@@ -238,6 +238,7 @@ def main():
         menu(h)
     h.stop()
     simulation(h)
+    h.simState = False
     print("simulation finished")
     for c in h.clients:
         print("closing client {}".format(c.getName()))
