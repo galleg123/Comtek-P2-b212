@@ -25,6 +25,10 @@ class car():
     roundb = False
     lost_time = 0
     timelostd = False
+    reactiontimer = 0
+    reaction = False
+    reactiontime = 0
+    startspeed = 0
     acceleration = 0
     deceleration = 1.0
     breaklengt = (speed**2)/(2*deceleration)                                #Standard estimation for breaklength

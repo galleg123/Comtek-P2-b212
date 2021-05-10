@@ -23,7 +23,7 @@ def simulation(DownLink: Downlink, UpLink: Uplink):
     display.set_caption("car: " + str(DownLink.clientNum))
     screen = display.set_mode(size)
     numOfRoads = 0
-    numOfCars = 5
+    numOfCars = 30
     cars = []
     Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):

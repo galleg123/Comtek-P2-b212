@@ -23,10 +23,9 @@ def simulation(Handler: handler):
     braking = False
     Handler.simState = True
     numOfRoads = 0
-    numOfCars = 5
+    numOfCars = 30
     counter = 0
     avgcounter = 0
-    reactiontimer = False
     brakingcar = 0
     avground = 28.959772205352785
     starttime = t()
@@ -63,7 +62,7 @@ def simulation(Handler: handler):
                 if e.text == "u":
                     for i in range(len(Handler.clients)):
                         db = database()
-                        #db.start(data=[cars[i].average, cars[i].lost_time, ])#0 = average, 1 = time lost, 2 = reaction time
+                        db.start(data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime]) #0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
@@ -114,7 +113,7 @@ def simulation(Handler: handler):
                         #c.rect.x += 5
                         C.rect.x -= 5
             check = c.rect.collidelist(rl)
-            if Handler.mode == 1 and c.speed < c.maxspeed and not check > -1 and not c == brakingcar:
+            if Handler.mode == 1 and c.speed <= c.maxspeed and not check > 0 and not c == brakingcar:
                 #print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
@@ -122,8 +121,19 @@ def simulation(Handler: handler):
                     pass
                 if c.num <= len(Handler.clients) and c.speed < 1:
                     c.time = 0
-            elif Handler.mode == 0 and check > -1 and c.speed < cars[check].speed:
+            elif Handler.mode == 0 and check > 0 and c.speed <= cars[check].speed:
                 c.movement("d")
+            elif check > -1 and c.num <= len(Handler.clients) and c.reaction == False:
+                print("reactiontimer started")
+                c.reactiontimer = t()
+                c.reaction = True
+                c.startspeed = c.speed
+            if c.reaction == True and c.startspeed > c.speed and not c.speed == 0:
+                c.reactiontime = t() - c.reactiontimer
+                c.reaction = False
+                print("reaction time: {}".format(c.reactiontime))
+            
+
                 
         if braking:
             brakingcar.movement(" ")
@@ -150,8 +160,6 @@ def simulation(Handler: handler):
                 print("time lost: {}".format(cars[i].lost_time))
                 starttime = t()
 
-        if reactiontimer:
-            pass
         
         #UI
         frame_counter += 1
