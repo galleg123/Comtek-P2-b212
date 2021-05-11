@@ -50,5 +50,5 @@ class Uplink(threading.Thread):
         print("uplink running")
         while True:
             if not "placeholder" in self.data and self.data != self.lastdata:
-                self.socket.send(bytes(self.data, "utf-8"))
+                self.socket.sendall(bytes(self.data, "utf-8"))
                 self.lastdata = self.data
