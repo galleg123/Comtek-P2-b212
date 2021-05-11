@@ -9,7 +9,9 @@ from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font
 #Global variables
 l = threading.Lock()
 
-serverIP = "127.0.0.1"
+serverIP = "10.225.171.52" #thomas
+#serverIP = "127.0.0.1" #localhost
+
 serverPort = 8888
 
 def simulation(DownLink: Downlink, UpLink: Uplink):
@@ -64,12 +66,13 @@ def simulation(DownLink: Downlink, UpLink: Uplink):
             for i in range(len(cars)):
                 location = DownLink.locations[i].split("(")
                 if not i == DownLink.clientNum:
-                    speed = float(location[0])
-                    center = (int(location[1].strip(")").split(",")[0]), int(location[1].strip(")").split(",")[1]))
-
-                    #if Client.newdata:
-                    cars[i].speed = speed
-                    cars[i].rect.center = center
+                    try:
+                        speed = float(location[0])
+                        center = (int(location[1].strip(")").split(",")[0]), int(location[1].strip(")").split(",")[1]))
+                        cars[i].speed = speed
+                        cars[i].rect.center = center
+                    except:
+                        print(location)
                     DownLink.newdata = False
         l.release()
 
