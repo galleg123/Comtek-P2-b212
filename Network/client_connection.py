@@ -60,10 +60,10 @@ class Uplink(threading.Thread):
         while running:
             if self.handler.simState:
                 if not started:
-                    self.socket.send(bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), "utf-8"))
+                    self.socket.sendall(bytes("start,{},{},{}".format(self.num, self.handler.clients.__len__(), self.handler.mode), "utf-8"))
                     started = True
                 elif not "placeholder" in self.handler.data and self.handler.data != lastdata:
-                    self.socket.send(bytes(self.handler.data, 'utf-8'))
+                    self.socket.sendall(bytes(self.handler.data, 'utf-8'))
                     lastdata = self.handler.data
                 if "quit" in self.handler.data:
                     print("quitting uplink")

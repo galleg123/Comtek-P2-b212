@@ -76,11 +76,14 @@ def simulation(Handler: handler):
         for i in range(len(Handler.locations)):
             if not Handler.locations.get(i) == "placeholder":
                 location = Handler.locations.get(i).split(",")
-                speed = float(location[0])
-                center = (int(location[1].strip("(")), int(location[2].strip(")")))
+                try:
+                    speed = float(location[0])
+                    center = (int(location[1].strip("(")), int(location[2].strip(")")))
+                    cars[i].speed = speed
+                    cars[i].rect.center = center
+                except:
+                    print(Handler.locations.get(i))
                 #if Handler.newdata:
-                cars[i].speed = speed
-                cars[i].rect.center = center
                 Handler.newdata = False
         l.release()
         screen.fill([0, 0, 0])
