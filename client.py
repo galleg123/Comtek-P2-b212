@@ -26,7 +26,7 @@ def simulation(DownLink: Downlink, UpLink: Uplink):
     screen = display.set_mode(size)
     numOfRoads = 0
     numOfCars = 30
-    cars = []
+    cars:list[car] = []
     Road = road()
     while ((Road.rect.y + Road.rect.height) <= 1000):
         screen.blit(Road.img, Road.rect)

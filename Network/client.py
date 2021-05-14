@@ -3,6 +3,7 @@ from socket import *
 import time
 
 # seperate threads to keep the connection to the server going while the simulation is running
+# this thread handles the data received from the server
 class Downlink(threading.Thread):
     def __init__(self, socket: socket):
         threading.Thread.__init__(self)
@@ -39,7 +40,7 @@ class Downlink(threading.Thread):
                             continue
                     
         
-
+# Uplink sends data to the client
 class Uplink(threading.Thread):
     def __init__(self,socket: socket):
         threading.Thread.__init__(self)

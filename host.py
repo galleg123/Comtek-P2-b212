@@ -30,7 +30,7 @@ def simulation(Handler: handler):
     avground = 28.959772205352785
     starttime = t()
 
-    cars = []
+    cars:list[car] = [] 
     Road = road()
     while Road.rect.y + Road.rect.height <= 1000:
         screen.blit(Road.img, Road.rect)
@@ -41,7 +41,7 @@ def simulation(Handler: handler):
         cars.append(Car)
     for i in range(Handler.clients.__len__(),numOfCars):
         cars.append(car(numOfRoads, "assets\\car2 new.png", screen, width, Road.rect.height, i))
-    rl = []
+    rl:list[Rect] = []
     for c in cars:
         pt = image.load("assets\\point.png")
         ptrect = pt.get_rect()
@@ -116,16 +116,22 @@ def simulation(Handler: handler):
                         #c.rect.x += 5
                         C.rect.x -= 5
             check = c.rect.collidelist(rl)
+            # slow cars if collision
+            if check > -1:
+                c.speed = cars[check].speed
+
+            # for manual mode
             if Handler.mode == 1 and c.speed <= c.maxspeed and not check > 0 and not c == brakingcar:
-                #print("accelerating car {}".format(c.num))
                 #accelerate cars if there are none in front of it
                 c.movement("d")
-                if c.num <= len(Handler.clients):
-                    pass
                 if c.num <= len(Handler.clients) and c.speed < 1:
                     c.time = 0
-            elif Handler.mode == 0 and check > 0 and c.speed <= cars[check].speed:
+
+            # for cacc mode
+            elif Handler.mode == 0 and check < 0 and c.speed <= cars[check].speed:
                 c.movement("d")
+
+                #reaction time
             elif check > -1 and c.num <= len(Handler.clients) and c.reaction == False:
                 print("reactiontimer started")
                 c.reactiontimer = t()
