@@ -1,3 +1,4 @@
+from Network.client import Downlink
 from Network.server import handler
 from Database.database_Class import database
 from classes.car import car
@@ -29,7 +30,6 @@ def simulation(Handler: handler):
     brakingcar = 0
     avground = 28.959772205352785
     starttime = t()
-
     cars:list[car] = [] 
     Road = road()
     while Road.rect.y + Road.rect.height <= 1000:
@@ -48,7 +48,7 @@ def simulation(Handler: handler):
         pt = transform.scale(pt, (ptrect.width*4, ptrect.height))
         ptrect = pt.get_rect() 
         ptrect.center = (c.rect.left - c.rect.width, c.rect.centery)
-        rl.append(ptrect)
+        rl.append(ptrect) 
     fps_start = t()
     frame_counter = 0
     while display.get_active() and len(Handler.clients) > 0:
@@ -119,6 +119,8 @@ def simulation(Handler: handler):
             # slow cars if collision
             if check > -1:
                 c.speed = cars[check].speed
+                c.movement(" ")
+                c.lowestDistance = cars[check].rect.left - c.rect.right 
 
             # for manual mode
             if Handler.mode == 1 and c.speed <= c.maxspeed and not check > 0 and not c == brakingcar:
@@ -206,6 +208,9 @@ def simulation(Handler: handler):
         display.flip()
         fpsClock.tick(FPS)  
 
+        #lowest distance test
+    for i in range(len(Handler.clients)):
+        print("car {} lowest distance: {}".format(i, cars[i].lowestDistance))
 
 
 def menu(Handler: handler):
@@ -243,7 +248,6 @@ def menu(Handler: handler):
         if e.type == QUIT:
             Handler.simState = True
     display.flip()
-
 
 
 

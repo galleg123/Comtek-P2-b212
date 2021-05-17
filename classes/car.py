@@ -22,6 +22,7 @@ class car():
     speeds = []
     average = 0
     rounds = 0
+    lowestDistance = 0
     roundb = False
     lost_time = 0
     timelostd = False
