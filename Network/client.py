@@ -38,6 +38,8 @@ class Downlink(threading.Thread):
                         except:
                             print(data)
                             continue
+            elif not "start" in r:
+                time.sleep(1)
                     
         
 # Uplink sends data to the client
