@@ -59,16 +59,15 @@ def simulation(Handler: handler):
             if e.type == QUIT:
                 return
             if e.type == TEXTINPUT:
-                if e.text == "u":
-                    for i in range(len(Handler.clients)):
-                        db = database()
-                        db.start(data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime]) #0 = average, 1 = time lost, 2 = reaction time
 
                 if e.text == "b" and not braking:
                     print("braking")
                     rand = random.randint(len(Handler.clients), len(cars) - 1)
                     brakingcar = cars[rand]
                     braking = True
+                if e.text == "t":
+                    print("delay: {}".format(delayTimer - t()))
+        delayTimer = t()
         Handler.data = "0:{}{}".format(str(int(cars[0].speed)), str(cars[0].rect.center))
         for i in range(len(cars) - 1):
             Handler.data += (";{}:{}{}".format((i + 1), int(cars[i + 1].speed), cars[i + 1].rect.center))
@@ -144,6 +143,9 @@ def simulation(Handler: handler):
                 c.reaction = False
                 print("reaction time: {}".format(c.reactiontime))
             
+            if c.speed > c.maxspeed:
+                print("car {} has exceeded max speed".format(c.num))
+            
 
                 
         if braking:
@@ -208,7 +210,12 @@ def simulation(Handler: handler):
         display.flip()
         fpsClock.tick(FPS)  
 
-        #lowest distance test
+    #upload to database
+    for i in range(len(Handler.clients)):
+        db = database()
+        db.start(data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime]) #0 = average, 1 = time lost, 2 = reaction time
+
+    #lowest distance test
     for i in range(len(Handler.clients)):
         print("car {} lowest distance: {}".format(i, cars[i].lowestDistance))
 
