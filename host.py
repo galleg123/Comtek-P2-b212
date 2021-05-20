@@ -10,8 +10,8 @@ from time import time as t
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, Rect, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
 
-init()                                                                      
-size = width, height = 1500, 1000                                           
+init()
+size = width, height = 1500, 1000
 screen = display.set_mode(size)
 f = font.Font("freesansbold.ttf", 32)
 
@@ -30,7 +30,7 @@ def simulation(Handler: handler):
     brakingcar = 0
     avground = 28.959772205352785
     starttime = t()
-    cars:list[car] = [] 
+    cars:list[car] = []
     Road = road()
     while Road.rect.y + Road.rect.height <= 1000:
         screen.blit(Road.img, Road.rect)

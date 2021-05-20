@@ -1,7 +1,7 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-  host="localhost",
+  host="37.97.6.138",
   user="remote",
   password="test",
   database="bil"
@@ -13,7 +13,7 @@ max = 0;
 
 mycursor = mydb.cursor()
 
-mycursor.execute("SELECT MAX(test_id) FROM testtable;");
+mycursor.execute("SELECT MAX(test_id) FROM data;");
 
 test = mycursor.fetchall()
 for i in test:

@@ -4,10 +4,12 @@ import threading
 
 class database(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, test_id: int, data: list):
         threading.Thread.__init__(self)
         self.max_test_id = 0
         self.max_id = 0
+        self.test_id = test_id
+        self.data = data
 
     def find_max_value_test_id(self):
 
@@ -63,12 +65,12 @@ class database(threading.Thread):
 
         return
 
-    def run(self, test_id, data):
+    def run(self):
         print("running: {}".format(threading.Thread.getName(self)))
 
-        self.upload_to_database(test_id, data[0], data[1], data[2])
+        self.upload_to_database(self.test_id, self.data[0], self.data[1], self.data[2])
 def main():
-    db = database()
+    db = database(1,[1,1,1])
     db.start()
     print("main executed")
 
