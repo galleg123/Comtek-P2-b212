@@ -10,8 +10,8 @@ from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font
 l = threading.Lock()
 
 #serverIP = "10.225.171.52" #thomas
-serverIP = "37.97.6.130" #kenneth
-#serverIP = "127.0.0.1" #localhost
+#serverIP = "37.97.6.130" #kenneth
+serverIP = "127.0.0.1" #localhost
 
 serverPort = 8888
 
@@ -43,7 +43,6 @@ def simulation(DownLink: Downlink, UpLink: Uplink):
     #for speed testing
     cars[0].rect.x = 0
     cars[0].rect.y = 5 + (Road.rect.height + 10) * 0
-    cars[0].speed = cars[0].maxspeed
     cars[0].movement("d")
     starttime = t()
 

@@ -1,6 +1,5 @@
-from Network.client import Downlink
 from Network.server import handler
-from Database.database_Class import database
+from Database.database_Class import database, find_max_value_test_id
 from classes.car import car
 from classes.road import road
 import random
@@ -10,8 +9,8 @@ from time import time as t
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, Rect, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
 
-init()                                                                      
-size = width, height = 1500, 1000                                           
+init()
+size = width, height = 1500, 1000
 screen = display.set_mode(size)
 f = font.Font("freesansbold.ttf", 32)
 
@@ -19,6 +18,8 @@ FPS = 30
 fpsClock = time.Clock()
 
 l = threading.Lock()
+
+testID = find_max_value_test_id()
 
 def simulation(Handler: handler):
     braking = False
@@ -28,9 +29,11 @@ def simulation(Handler: handler):
     counter = 0
     avgcounter = 0
     brakingcar = 0
+    brake = False
+    running = True
     avground = 28.959772205352785
     starttime = t()
-    cars:list[car] = [] 
+    cars:list[car] = []
     Road = road()
     while Road.rect.y + Road.rect.height <= 1000:
         screen.blit(Road.img, Road.rect)
@@ -51,13 +54,13 @@ def simulation(Handler: handler):
         rl.append(ptrect) 
     fps_start = t()
     frame_counter = 0
-    while display.get_active() and len(Handler.clients) > 0:
+    while display.get_active() and len(Handler.clients) > 0 and running == True:
         numOfRoads = 0
         Road.rect.y = 0
 
         for e in event.get():
             if e.type == QUIT:
-                return
+                running = False
             if e.type == TEXTINPUT:
 
                 if e.text == "b" and not braking:
@@ -66,7 +69,7 @@ def simulation(Handler: handler):
                     brakingcar = cars[rand]
                     braking = True
                 if e.text == "t":
-                    print("delay: {}".format(delayTimer - t()))
+                    print("delay: {}".format(t() - delayTimer))
         delayTimer = t()
         Handler.data = "0:{}{}".format(str(int(cars[0].speed)), str(cars[0].rect.center))
         for i in range(len(cars) - 1):
@@ -155,6 +158,11 @@ def simulation(Handler: handler):
                 braking = False
                 brakingcar = 0
                 counter = 0
+                brake = False
+            elif brakingcar.speed <= 0 and not brake:
+                print("brake successful")
+                print(t()- starttime)
+                brake = True
 
         #measurements
         #average
@@ -212,12 +220,13 @@ def simulation(Handler: handler):
 
     #upload to database
     for i in range(len(Handler.clients)):
-        db = database()
-        db.start(data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime]) #0 = average, 1 = time lost, 2 = reaction time
+        db = database(testID, data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime])
+        db.start() #0 = average, 1 = time lost, 2 = reaction time
 
     #lowest distance test
-    for i in range(len(Handler.clients)):
-        print("car {} lowest distance: {}".format(i, cars[i].lowestDistance))
+    print("distance required: {}".format(Car.rect.width))
+    for c in cars:
+        print("car {} lowest distance: {}".format(c.num, c.lowestDistance))
 
 
 def menu(Handler: handler):
@@ -248,9 +257,11 @@ def menu(Handler: handler):
                 Handler.simState = True
             if caccrect.collidepoint(mouse.get_pos()):
                 Handler.mode = 0
+                print(Handler.mode)
                 pass
             if manualrect.collidepoint(mouse.get_pos()):
                 Handler.mode = 1
+                print(Handler.mode)
                 pass
         if e.type == QUIT:
             Handler.simState = True

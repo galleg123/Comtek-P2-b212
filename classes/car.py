@@ -18,7 +18,7 @@ import time
 
 
 class car():
-    speed = 10                                              
+    speed = 10
     speeds = []
     average = 0
     rounds = 0
@@ -42,7 +42,7 @@ class car():
     rect = img.get_rect()                                                   #Define rect as the size of car image
     img = transform.scale(img, [int(rect.width), int(rect.height)])         #Change the size of car Size is equal to 4m long, and 2,4m wide
     rect = img.get_rect()
-
+#yooooooo
     def movement(self, txt: str):                                                  #Define movement for player controlled car
             if txt == "d":                                                  #If d is pressed
             
