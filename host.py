@@ -1,5 +1,5 @@
 from Network.server import handler
-from Database.database_Class import database
+from Database.database_Class import database, find_max_value_test_id
 from classes.car import car
 from classes.road import road
 import random
@@ -19,6 +19,7 @@ fpsClock = time.Clock()
 
 l = threading.Lock()
 
+testID = find_max_value_test_id()
 
 def simulation(Handler: handler):
     braking = False

@@ -1,11 +1,10 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-  host="37.97.6.138",
+  host="37.97.6.130",
   user="remote",
   password="test",
-  database="bil",
-  port="3306"
+  database="bil"
 )
 
 
