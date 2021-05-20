@@ -24,8 +24,7 @@ class database(threading.Thread):
             mycursor.execute("SELECT MAX(id) FROM data;")
 
             test = mycursor.fetchall()
-            for i in test:
-                self.max_id = int(i[0])+1
+            self.max_id = int(test[len(test)])+1
         except:
             self.max_id = 1
 # Min ide er at finde test_id inde i host for at den forbliver uændret, og så ville den kunne køre value id herinde.

@@ -10,8 +10,8 @@ from pygame import TEXTINPUT, image, display, init, event, QUIT, transform, font
 l = threading.Lock()
 
 #serverIP = "10.225.171.52" #thomas
-serverIP = "37.97.6.130" #kenneth
-#serverIP = "127.0.0.1" #localhost
+#serverIP = "37.97.6.130" #kenneth
+serverIP = "127.0.0.1" #localhost
 
 serverPort = 8888
 

@@ -19,7 +19,7 @@ fpsClock = time.Clock()
 
 l = threading.Lock()
 
-testID = find_max_value_test_id()
+#testID = find_max_value_test_id()
 
 def simulation(Handler: handler):
     braking = False
@@ -77,8 +77,8 @@ def simulation(Handler: handler):
         l.acquire()
         for i in range(len(Handler.locations)):
             if not Handler.locations.get(i) == "placeholder":
-                location = Handler.locations.get(i).split(",")
                 try:
+                    location = Handler.locations.get(i).split(",")
                     speed = float(location[0])
                     center = (int(location[1].strip("(")), int(location[2].strip(")")))
                     cars[i].speed = speed
@@ -224,9 +224,10 @@ def simulation(Handler: handler):
     #    db.start() #0 = average, 1 = time lost, 2 = reaction time
 
     #lowest distance test
-    print("distance required: {}".format(Car.rect.width))
-    for c in cars:
-        print("car {} lowest distance: {}".format(c.num, c.lowestDistance))
+    if len(Handler.clients) > 0:
+        print("distance required: {}".format(Car.rect.width))
+        for c in cars:
+            print("car {} lowest distance: {}".format(c.num, c.lowestDistance))
 
 
 def menu(Handler: handler):
