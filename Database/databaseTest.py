@@ -4,7 +4,8 @@ mydb = mysql.connector.connect(
   host="37.97.6.138",
   user="remote",
   password="test",
-  database="bil"
+  database="bil",
+  port="3306"
 )
 
 

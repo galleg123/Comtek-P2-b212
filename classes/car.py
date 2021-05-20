@@ -18,7 +18,7 @@ import time
 
 
 class car():
-    speed = 10                                              
+    speed = 10
     speeds = []
     average = 0
     rounds = 0
