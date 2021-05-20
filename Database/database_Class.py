@@ -20,13 +20,15 @@ class database(threading.Thread):
         )
 
         mycursor = mydb.cursor()
-        try:
-            mycursor.execute("SELECT MAX(id) FROM data;")
+#        try:
+        mycursor.execute("SELECT MAX(id) FROM data;")
 
-            test = mycursor.fetchall()
-            self.max_id = int(test[len(test)])+1
-        except:
-            self.max_id = 1
+        test = mycursor.fetchall()
+        self.max_id = test[0][0]
+        print(self.max_id)
+#        except:
+#            self.max_id = 1
+#            print(self.max_id)
 # Min ide er at finde test_id inde i host for at den forbliver uændret, og så ville den kunne køre value id herinde.
 
     def upload_to_database(self, test_id, average, time_lost, reaction_time):
