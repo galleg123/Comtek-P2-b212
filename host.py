@@ -19,7 +19,6 @@ fpsClock = time.Clock()
 
 l = threading.Lock()
 
-testID = database.find_max_value_test_id()
 
 def simulation(Handler: handler):
     braking = False
@@ -219,9 +218,9 @@ def simulation(Handler: handler):
         fpsClock.tick(FPS)  
 
     #upload to database
-    for i in range(len(Handler.clients)):
-        db = database(testID, data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime])
-        db.start() #0 = average, 1 = time lost, 2 = reaction time
+    #for i in range(len(Handler.clients)):
+    #    db = database(testID, data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime])
+    #    db.start() #0 = average, 1 = time lost, 2 = reaction time
 
     #lowest distance test
     print("distance required: {}".format(Car.rect.width))
