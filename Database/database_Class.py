@@ -24,7 +24,7 @@ class database(threading.Thread):
         mycursor.execute("SELECT MAX(id) FROM data;")
 
         test = mycursor.fetchall()
-        self.max_id = test[0][0]
+        self.max_id = int(test[0][0]) + 1
         print(self.max_id)
 #        except:
 #            self.max_id = 1

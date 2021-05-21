@@ -5,6 +5,7 @@ from classes.road import road
 import random
 import threading
 from time import time as t
+from time import sleep
 
 from pygame import KEYDOWN, MOUSEBUTTONDOWN, Rect, TEXTINPUT, image, display, init, event, QUIT, transform, mouse, font, time
 
@@ -222,6 +223,7 @@ def simulation(Handler: handler):
     for i in range(len(Handler.clients)):
         db = database(testID, data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime])
         db.start() #0 = average, 1 = time lost, 2 = reaction time
+        sleep(0.5)
 
     #lowest distance test
     if len(Handler.clients) > 0:
