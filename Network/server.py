@@ -9,12 +9,12 @@ class handler(threading.Thread):
         self.HOST = ""
         self.PORT = 8888
         self.CONN_COUNTER = 0
-        self.running_sockets = []
+        self.running_sockets:list[socket] = []
         self.s = socket(AF_INET, SOCK_STREAM)
         self.data = "placeholder"
-        self.locations = {}
+        self.locations:dict[int,str] = {}
         self.simState = False
-        self.clients = []
+        self.clients:list[Downlink] = []
         self.newdata = False
         self.quitting = False
         self.mode = 0 #0 = CACC mode, 1 = Manual mode

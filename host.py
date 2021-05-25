@@ -20,7 +20,7 @@ fpsClock = time.Clock()
 
 l = threading.Lock()
 
-testID = find_max_value_test_id()
+#testID = find_max_value_test_id()
 
 def simulation(Handler: handler):
     braking = False
@@ -77,7 +77,7 @@ def simulation(Handler: handler):
             Handler.data += (";{}:{}{}".format((i + 1), int(cars[i + 1].speed), cars[i + 1].rect.center))
         l.acquire()
         for i in range(len(Handler.locations)):
-            if not Handler.locations.get(i) == "placeholder":
+            if not "placeholder" in Handler.locations.get(i):
                 try:
                     location = Handler.locations.get(i).split(",")
                     speed = float(location[0])
@@ -137,15 +137,15 @@ def simulation(Handler: handler):
                 c.movement("d")
 
                 #reaction time
-            elif check > -1 and c.num <= len(Handler.clients) and c.reaction == False:
-                print("reactiontimer started")
-                c.reactiontimer = t()
-                c.reaction = True
-                c.startspeed = c.speed
-            if c.reaction == True and c.startspeed > c.speed and not c.speed == 0:
-                c.reactiontime = t() - c.reactiontimer
-                c.reaction = False
-                print("reaction time: {}".format(c.reactiontime))
+            #elif check > -1 and c.num <= len(Handler.clients) and c.reaction == False:
+            #    print("reactiontimer started")
+            #    c.reactiontimer = t()
+            #    c.reaction = True
+            #    c.startspeed = c.speed
+            #if c.reaction == True and c.startspeed > c.speed and not c.speed == 0:
+            #    c.reactiontime = t() - c.reactiontimer
+            #    c.reaction = False
+            #    print("reaction time: {}".format(c.reactiontime))
             
             if c.speed > c.maxspeed:
                 print("car {} has exceeded max speed".format(c.num))
@@ -167,20 +167,20 @@ def simulation(Handler: handler):
 
         #measurements
         #average
-        avgcounter += 1
-        if avgcounter == 500:
-            avgcounter = 0
-            for c in cars:
-                c.speeds.append(c.speed)
-                c.average = sum(c.speeds) / len(c.speeds)
+        #avgcounter += 1
+        #if avgcounter == 500:
+        #    avgcounter = 0
+        #    for c in cars:
+        #        c.speeds.append(c.speed)
+        #        c.average = sum(c.speeds) / len(c.speeds)
 
         #time lost
-        for i in range(len(Handler.clients)):
-            if cars[i].rounds > 0 and cars[i].timelostd:
-                cars[i].timelostd = False
-                cars[i].lost_time = t() - starttime - avground
-                print("time lost: {}".format(cars[i].lost_time))
-                starttime = t()
+        #for i in range(len(Handler.clients)):
+        #    if cars[i].rounds > 0 and cars[i].timelostd:
+        #        cars[i].timelostd = False
+        #        cars[i].lost_time = t() - starttime - avground
+        #        print("time lost: {}".format(cars[i].lost_time))
+        #        starttime = t()
 
         
         #UI
@@ -220,10 +220,10 @@ def simulation(Handler: handler):
         fpsClock.tick(FPS)  
 
     #upload to database
-    for i in range(len(Handler.clients)):
-        db = database(testID, data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime])
-        db.start() #0 = average, 1 = time lost, 2 = reaction time
-        sleep(0.5)
+    #for i in range(len(Handler.clients)):
+    #    db = database(testID, data=[cars[i].average, cars[i].lost_time, cars[i].reactiontime])
+    #    db.start() #0 = average, 1 = time lost, 2 = reaction time
+    #    sleep(0.5)
 
     #lowest distance test
     if len(Handler.clients) > 0:
