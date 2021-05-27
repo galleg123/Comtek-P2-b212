@@ -1,0 +1,9 @@
+hele koden: mellem 0.03 og 0.3 sekunder aka 30 fps og 3 fps
+
+behandling af modtaget data: mellem 0 og 0.07
+
+behandling af biler: mellem 0.001 og 0.02 hvilket ville svare til 1000 fps og 50 fps
+
+GUI: mellem 0.1 og 0.0009
+
+tests: 0.00
