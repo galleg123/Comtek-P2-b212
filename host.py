@@ -195,18 +195,18 @@ def simulation(Handler: handler):
         Brect = B.get_rect()
         Brect.center = Btextrect.center
         Brect.bottom = Btextrect.top
-        Utext = f.render("upload data", True, (255,255,255))
-        Utextrect = Utext.get_rect()
-        Utextrect.center = Brect.center
-        Utextrect.bottom = Brect.top
-        U = image.load("assets\\keys\\U.png")
-        Urect = U.get_rect()
-        Urect.center = Utextrect.center
-        Urect.bottom = Utextrect.top
+        #Utext = f.render("upload data", True, (255,255,255))
+        #Utextrect = Utext.get_rect()
+        #Utextrect.center = Brect.center
+        #Utextrect.bottom = Brect.top
+        #U = image.load("assets\\keys\\U.png")
+        #Urect = U.get_rect()
+        #Urect.center = Utextrect.center
+        #Urect.bottom = Utextrect.top
         screen.blit(Btext,Btextrect)
         screen.blit(B,Brect)
-        screen.blit(Utext, Utextrect)
-        screen.blit(U, Urect)
+        #screen.blit(Utext, Utextrect)
+        #screen.blit(U, Urect)
         display.flip()
         if fps > 15:
             fpsClock.tick(FPS)  
