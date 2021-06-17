@@ -132,7 +132,7 @@ def simulation(Handler: handler):
                     c.time = 0
 
             # for cacc mode
-            elif Handler.mode == 0 and check < 0 and c.speed <= cars[check].speed:
+            elif Handler.mode == 0 and check < 0 and c.speed < cars[check].speed:
                 c.movement("d")
 
                 #reaction time
