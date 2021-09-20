@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\thoma\\AppData\\Local\\Microsoft\\WindowsApps\\python3.9.exe"
+    "python.pythonPath": "C:\\Users\\thoma\\AppData\\Local\\Microsoft\\WindowsApps\\python3.9.exe",
+    "C_Cpp.errorSquiggles": "Disabled"
 }
